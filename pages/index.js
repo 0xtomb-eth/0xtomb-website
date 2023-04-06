@@ -16,8 +16,8 @@ import {
   ListItem,
   Grid,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import Layout from '@/layout/Layout';
 
 function HomePage() {
@@ -25,14 +25,27 @@ function HomePage() {
   const [loading, setLoading] = useState(false);
   const [sendMesaage, setSendMesaage] = useState('');
   const [processedEmail, setProcessedEmail] = useState('');
-  const [fields, setFields] = useState([]);
+  const {
+    handleSubmit,
+    getValues,
+    control,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = handleSubmit((data) => {
+    let fieldValue = [];
+    data.beneficiary.forEach((val) => {
+      fieldValue.push(val.beneficiary);
+    });
+    data.beneficiary = fieldValue;
+    console.log(data);
+  });
 
-  const addField = () => {
-    setFields([...fields, '']);
-  };
-  const removeField = (index) => {
-    setFields([...fields, '']);
-  };
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control, // control props comes from useForm (optional: if you are using FormContext)
+      name: 'beneficiary', // unique name for your Field Array
+    }
+  );
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -41,14 +54,9 @@ function HomePage() {
 
     setOpen(false);
   };
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-  });
+
+  useEffect(() => {});
+
   return (
     <Layout>
       <Container
@@ -79,11 +87,11 @@ function HomePage() {
         />
         <Divider />
         <Typography>请填入受益人的地址</Typography>
-        {fields.map((text, index) => (
+        {fields.map(({ id }, index) => (
           <Controller
-            name={`beneficiary${index}`}
+            name={`beneficiary[${index}].beneficiary`}
             control={control}
-            key={index}
+            key={id}
             rules={{ required: true }}
             render={({ field: { onChange, value } }) => (
               <Grid container gap={2} alignItems={'center'}>
@@ -98,14 +106,14 @@ function HomePage() {
                   </Box>
                 </Grid>
                 <Grid xs={1}>
-                  <Button onClick={addField} variant="contained">
+                  <Button onClick={append} variant="contained">
                     +
                   </Button>
                 </Grid>
                 <Grid xs={1}>
                   <Button
                     onClick={() => {
-                      removeField(index);
+                      remove(index);
                     }}
                     variant="contained"
                   >
@@ -117,7 +125,23 @@ function HomePage() {
           />
         ))}
 
-        <Button onClick={addField}>Add Field</Button>
+        <Button onClick={append}>Add Field</Button>
+        <Button
+          onClick={() => {
+            const b = getValues('beneficiary');
+            console.log(
+              b.map((val) => {
+                return val.beneficiary;
+              })
+            );
+          }}
+        >
+          Comfirm beneficiary
+        </Button>
+        <Divider />
+        <Typography>资产分配</Typography>
+
+        <Divider />
         <Button variant="contained" onClick={onSubmit}>
           Submit
         </Button>
