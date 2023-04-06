@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import Layout from '@/layout/Layout';
+import Layout from '../layout/Layout';
 
 function HomePage() {
   const [open, setOpen] = useState(false);

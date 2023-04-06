@@ -8,9 +8,10 @@ import {
   printOp,
   getHttpRpcClient,
   ERC20_ABI,
-} from '../src';
+} from '../../src';
 // import Web3 from "web3";
-import config from '../config.json';
+import config from '../../config.json';
+
 
 async function transfer(key, t, amt, withPM) {
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
@@ -53,7 +54,7 @@ async function transfer(key, t, amt, withPM) {
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req, res) => {
   try {
-    const { key, t, amt, withPM } = await JSON.parse(req.body);
+    const { key, t, amt, withPM } = req.body;
     const data = await transfer(key, t, amt, withPM);
     res.status(200).json(JSON.stringify(data));
   } catch (e) {
