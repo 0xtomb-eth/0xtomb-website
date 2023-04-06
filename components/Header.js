@@ -49,7 +49,37 @@ const Header = () => {
         borderBottom="1px solid black"
       >
         <Box display="flex">LOGO</Box>
-
+        <Box
+          gap={4}
+          display={{ md: 'flex', sm: 'none', xs: 'none' }}
+          fontSize={2}
+          lineHeight={3}
+        >
+          <Typography
+            sx={{ cursor: 'pointer' }}
+            onClick={() => {
+              router.push('/');
+            }}
+          >
+            签署遗嘱
+          </Typography>
+          <Typography
+            sx={{ cursor: 'pointer' }}
+            onClick={() => {
+              router.push('/will');
+            }}
+          >
+            确认遗嘱
+          </Typography>
+          <Typography
+            sx={{ cursor: 'pointer' }}
+            onClick={() => {
+              router.push('/cemetary');
+            }}
+          >
+            墓园
+          </Typography>
+        </Box>
         <Box display="flex" gap="40px">
           <ConnectButton />
         </Box>

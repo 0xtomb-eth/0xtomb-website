@@ -52,6 +52,9 @@ function HomePage() {
   });
 
   const onSubmit = handleSubmit(async (data) => {
+    if (!data?.amount) {
+      return;
+    }
     let fieldValue = [];
     data.beneficiary = data.beneficiary.map((val) => {
       return val.beneficiary;
