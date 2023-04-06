@@ -20,8 +20,8 @@ import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import WILL_ABI from '../abi/willAbi.json';
 
-import Layout from '@/layout/Layout';
-import showMessage from '@/components/showMessage';
+import Layout from '../layout/Layout';
+import showMessage from '../components/showMessage';
 import { usePrepareContractWrite, useContractWrite } from 'wagmi';
 
 function HomePage() {

@@ -1,6 +1,4 @@
-import express from 'express';
 import { ethers } from 'ethers';
-import cors from 'cors';
 import {
   getVerifyingPaymaster,
   getSimpleAccount,
@@ -11,7 +9,6 @@ import {
 } from '../../src';
 // import Web3 from "web3";
 import config from '../../config.json';
-
 
 async function transfer(key, t, amt, withPM) {
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);

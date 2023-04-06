@@ -27,7 +27,7 @@ import {
   CardActionArea,
   Slide,
 } from '@mui/material';
-import Layout from '@/layout/Layout';
+import Layout from '../layout/Layout';
 import React from 'react';
 import { useState } from 'react';
 
