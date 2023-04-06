@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@account-abstraction/contracts": "^0.5.0",
+    "@account-abstraction/sdk": "^0.5.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@ethersproject/providers": "^5.7.2",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.16",
     "@rainbow-me/rainbowkit": "^0.12.0",
