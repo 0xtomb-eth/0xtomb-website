@@ -18,27 +18,24 @@ import {
 } from '@mui/material';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useEffect, useState } from 'react';
+import WILL_ABI from '../abi/willAbi.json';
+
 import Layout from '@/layout/Layout';
+import showMessage from '@/components/showMessage';
+import { usePrepareContractWrite, useContractWrite } from 'wagmi';
 
 function HomePage() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sendMesaage, setSendMesaage] = useState('');
   const [processedEmail, setProcessedEmail] = useState('');
+  const [beneficiaries, setBeneficiaries] = useState([]);
   const {
     handleSubmit,
     getValues,
     control,
     formState: { errors },
   } = useForm();
-  const onSubmit = handleSubmit((data) => {
-    let fieldValue = [];
-    data.beneficiary.forEach((val) => {
-      fieldValue.push(val.beneficiary);
-    });
-    data.beneficiary = fieldValue;
-    console.log(data);
-  });
 
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
@@ -47,6 +44,43 @@ function HomePage() {
     }
   );
 
+  const { data, writeAsync } = useContractWrite({
+    address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+    abi: WILL_ABI,
+    functionName: 'setAllocation',
+    mode: 'recklesslyUnprepared',
+  });
+
+  const onSubmit = handleSubmit(async (data) => {
+    let fieldValue = [];
+    data.beneficiary = data.beneficiary.map((val) => {
+      return val.beneficiary;
+    });
+    data.amount = data.amount.map((i) => {
+      return i.map((j) => j.amount);
+    });
+    try {
+      const res = await Promise.all(
+        data.amount.map(async (val) => {
+          return await writeAsync?.({
+            recklesslySetUnpreparedArgs: [
+              '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+              data.beneficiary,
+              val,
+            ],
+          });
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      showMessage({
+        type: 'error',
+        title: 'Fail to Tx',
+        body: JSON.stringify(error),
+      });
+    }
+  });
+
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -54,8 +88,6 @@ function HomePage() {
 
     setOpen(false);
   };
-
-  useEffect(() => {});
 
   return (
     <Layout>
@@ -72,17 +104,29 @@ function HomePage() {
         <Controller
           name="name"
           control={control}
-          rules={{ required: true }}
+          rules={{ required: '请输入姓名' }}
           render={({ field: { onChange, value } }) => (
-            <TextField value={value} label="姓名" onChange={onChange} />
+            <TextField
+              value={value}
+              label="姓名"
+              error={errors?.name?.message}
+              helperText={errors?.name?.message}
+              onChange={onChange}
+            />
           )}
         />
         <Controller
           name="epitaph"
           control={control}
-          rules={{ required: true }}
+          rules={{ required: '请输入墓志铭' }}
           render={({ field: { onChange, value } }) => (
-            <TextField value={value} label="遗嘱" onChange={onChange} />
+            <TextField
+              value={value}
+              label="墓志铭"
+              error={errors?.epitaph?.message}
+              helperText={errors?.epitaph?.message}
+              onChange={onChange}
+            />
           )}
         />
         <Divider />
@@ -92,14 +136,26 @@ function HomePage() {
             name={`beneficiary[${index}].beneficiary`}
             control={control}
             key={id}
-            rules={{ required: true }}
+            rules={{ required: '请输入受益人地址' }}
             render={({ field: { onChange, value } }) => (
               <Grid container gap={2} alignItems={'center'}>
                 <Grid xs={9}>
                   <Box>
                     <TextField
                       fullWidth
+                      required
                       value={value}
+                      error={
+                        (errors != undefined) &
+                          (errors?.beneficiary?.length > 0) &&
+                        errors?.beneficiary[index]?.beneficiary?.message
+                      }
+                      helperText={
+                        (errors != undefined) &
+                        (errors?.beneficiary?.length > 0)
+                          ? errors?.beneficiary[index]?.beneficiary?.message
+                          : ''
+                      }
                       onChange={onChange}
                       label={`受益方 ${index + 1}`}
                     />
@@ -127,20 +183,77 @@ function HomePage() {
 
         <Button onClick={append}>Add Field</Button>
         <Button
+          disabled={!fields.length}
           onClick={() => {
             const b = getValues('beneficiary');
-            console.log(
-              b.map((val) => {
+            const beneficiaries = b
+              .map((val) => {
                 return val.beneficiary;
               })
-            );
+              .filter((item) => item != null && item !== '');
+            if (beneficiaries.length == 0) {
+              onSubmit();
+            }
+            setBeneficiaries(beneficiaries);
           }}
         >
-          Comfirm beneficiary
+          Confirm beneficiary
         </Button>
         <Divider />
         <Typography>资产分配</Typography>
-
+        {[{ name: 'ETH' }, { name: 'USDT' }].map((value, index) => {
+          return (
+            <Grid key={index} container spacing={1}>
+              <Grid xs={3}>
+                <Typography>{value.name}</Typography>
+              </Grid>
+              <Grid xs={3}>
+                <Typography>{value.amount}</Typography>
+              </Grid>
+              <Grid xs={6} container>
+                {beneficiaries.map((value, index2) => {
+                  return (
+                    <>
+                      <Grid xs={6} rowSpacing={3}>
+                        <Typography>
+                          {value?.slice(0, 5) + '...' + value?.slice(-5, -1)}
+                        </Typography>
+                      </Grid>
+                      <Grid xs={6}>
+                        <Controller
+                          name={`amount.${index}.${index2}.amount`}
+                          control={control}
+                          rules={{
+                            required: '请输入分配比例',
+                          }}
+                          render={({ field: { onChange, value } }) => (
+                            <TextField
+                              value={value}
+                              onChange={onChange}
+                              size={'small'}
+                              error={
+                                errors?.amount &&
+                                errors?.amount[index] &&
+                                errors?.amount[index][index2]
+                              }
+                              helperText={
+                                errors?.amount &&
+                                errors?.amount[index] &&
+                                errors?.amount[index][index2]
+                                  ? errors?.amount[index][index2].amount.message
+                                  : ''
+                              }
+                            />
+                          )}
+                        />
+                      </Grid>
+                    </>
+                  );
+                })}
+              </Grid>
+            </Grid>
+          );
+        })}
         <Divider />
         <Button variant="contained" onClick={onSubmit}>
           Submit

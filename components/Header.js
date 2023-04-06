@@ -53,14 +53,6 @@ const Header = () => {
         <Box display="flex" gap="40px">
           <ConnectButton />
         </Box>
-
-        <MenuIcon
-          sx={{
-            display: { md: 'none', sm: 'block' },
-            cursor: 'pointer',
-          }}
-          onClick={toggleDrawer(true)}
-        />
       </Box>
     </>
   );
