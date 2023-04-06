@@ -11,7 +11,6 @@ import {
 // import Web3 from "web3";
 import config from '../../config.json';
 
-
 // * TODO: batch approve ERC20s
 // This example requires several layers of calls:
 // EntryPoint
