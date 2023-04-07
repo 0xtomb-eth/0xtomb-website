@@ -36,6 +36,15 @@ function HomePage() {
     name: 'beneficiary', // unique name for your Field Array
   });
 
+  const {
+    fields: validatorField,
+    append: validatorAppend,
+    remove: validatorRemove,
+  } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: 'validator', // unique name for your Field Array
+  });
+
   const { data, writeAsync } = useContractWrite({
     address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
     abi: WILL_ABI,
@@ -45,39 +54,43 @@ function HomePage() {
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
+    console.log(data);
     data.beneficiary = data.beneficiary.map((val) => {
       return val.beneficiary;
+    });
+    data.validator = data.validator.map((val) => {
+      return val.validator;
     });
     data.amount = data.amount?.map((i) => {
       return i.map((j) => j.amount);
     });
-    try {
-      const res = await Promise.all(
-        data.amount.map(async (val) => {
-          return await writeAsync?.({
-            recklesslySetUnpreparedArgs: [
-              '0x7Bcf6f55E7136960A5602d6AB6bc163C7D7C4902',
-              data.beneficiary,
-              val,
-            ],
-          });
-        })
-      );
-      showMessage({
-        type: 'success',
-        title: 'Sign Will Success',
-        message: JSON.stringify(res),
-      });
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      showMessage({
-        type: 'error',
-        title: 'Fail to Tx',
-        body: JSON.stringify(error),
-      });
-      setLoading(false);
-    }
+    // try {
+    //   const res = await Promise.all(
+    //     data.amount.map(async (val) => {
+    //       return await writeAsync?.({
+    //         recklesslySetUnpreparedArgs: [
+    //           '0x7Bcf6f55E7136960A5602d6AB6bc163C7D7C4902',
+    //           data.beneficiary,
+    //           val,
+    //         ],
+    //       });
+    //     })
+    //   );
+    //   showMessage({
+    //     type: 'success',
+    //     title: 'Sign Will Success',
+    //     message: JSON.stringify(res),
+    //   });
+    //   setLoading(false);
+    // } catch (error) {
+    //   console.log(error);
+    //   showMessage({
+    //     type: 'error',
+    //     title: 'Fail to Tx',
+    //     body: JSON.stringify(error),
+    //   });
+    //   setLoading(false);
+    // }
   });
 
   useEffect(() => {
@@ -170,6 +183,121 @@ function HomePage() {
           </Stack>
         )}
         {active == 2 && (
+          <Stack direction={'row'}>
+            <Box
+              component={'img'}
+              src="/svg/scroll.svg"
+              width={'400px'}
+              height={'400px'}
+              mr={'20px'}
+            />
+            <Stack width={'400px'} justifyContent="center" gap={1}>
+              <Typography
+                width={'180px'}
+                fontSize={'64px'}
+                fontWeight="200"
+                lineHeight={'64px'}
+              >
+                Who is Validator?
+              </Typography>
+              <Typography
+                fontSize={'15px'}
+                fontWeight={200}
+                fontStyle={'italic'}
+              >
+                Sign Your Will Sign Your Will Sign
+              </Typography>
+              {fields.map(({ id }, index) => (
+                <Controller
+                  name={`[${index}].validator`}
+                  control={control}
+                  key={id}
+                  rules={{ required: '请输入验证者地址' }}
+                  render={({ field: { onChange, value } }) => (
+                    <Grid container gap={2} alignItems={'center'}>
+                      <Grid xs={9}>
+                        <Box>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            required
+                            value={value}
+                            // error={errors?.beneficiary?.length > 0}
+                            // helperText={
+                            //   errors?.beneficiary?.length > 0
+                            //     ? errors?.beneficiary[index]?.beneficiary
+                            //         ?.message
+                            //     : ''
+                            // }
+                            onChange={onChange}
+                            label={`Validator ${index + 1}`}
+                          />
+                        </Box>
+                      </Grid>
+                      <Grid xs={1}>
+                        <IconButton
+                          color="primary"
+                          size="small"
+                          onClick={validatorAppend}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </Grid>
+                      <Grid xs={1}>
+                        <IconButton
+                          color="primary"
+                          size="small"
+                          disabled={validatorField.length == 1}
+                          onClick={() => {
+                            validatorRemove(index);
+                          }}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  )}
+                />
+              ))}
+              <Grid container gap={2}>
+                <Grid xs={5}>
+                  <Button
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      setActive(active - 1);
+                    }}
+                  >
+                    Pre
+                  </Button>
+                </Grid>
+                <Grid xs={5}>
+                  <Button
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    disabled={!fields.length}
+                    onClick={() => {
+                      const b = getValues('beneficiary');
+                      const beneficiaries = b
+                        .map((val) => {
+                          return val.beneficiary;
+                        })
+                        .filter((item) => item != null && item !== '');
+
+                      setBeneficiaries(beneficiaries);
+                      setActive(active + 1);
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+            </Stack>
+          </Stack>
+        )}
+        {active == 3 && (
           <Stack direction={'row'}>
             <Box
               component={'img'}
@@ -284,7 +412,7 @@ function HomePage() {
             </Stack>
           </Stack>
         )}
-        {active == 3 && (
+        {active == 4 && (
           <Stack direction={'row'}>
             <Box
               component={'img'}
@@ -413,18 +541,21 @@ function HomePage() {
               justifyContent: 'space-between',
             }}
           >
-            {['Sign Your Will', 'Who is beneficiary', 'How much they get'].map(
-              (v, index) => (
-                <Typography
-                  key={index}
-                  fontStyle={active == index + 1 ? '' : 'italic'}
-                  color={active == index + 1 ? 'black' : '#a2a9b4'}
-                  textTransform={'capitalize'}
-                >
-                  {v}
-                </Typography>
-              )
-            )}
+            {[
+              'Sign Your Will',
+              'Who is Validator',
+              'Who is beneficiary',
+              'How much they get',
+            ].map((v, index) => (
+              <Typography
+                key={index}
+                fontStyle={active == index + 1 ? '' : 'italic'}
+                color={active == index + 1 ? 'black' : '#a2a9b4'}
+                textTransform={'capitalize'}
+              >
+                {v}
+              </Typography>
+            ))}
           </Box>
         </Box>
       </Container>

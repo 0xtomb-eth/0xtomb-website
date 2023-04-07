@@ -1,11 +1,17 @@
 import {
   Box,
+  TextField,
   Container,
-  LinearProgress,
   Button,
-  Card,
+  Stack,
   Slide,
+  Grid,
+  Card,
+  Typography,
+  LinearProgress,
 } from '@mui/material';
+import { Controller } from 'react-hook-form';
+
 import Layout from '../layout/Layout';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
@@ -20,42 +26,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 const willContractConfig = {
-  address: '0x1dfe7ca09e99d10835bf73044a23b73fc20623df',
+  address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
   abi: WILL_ABI,
 };
 
 function Will() {
-  const [willer, setWiller] = useState(
-    '0xb15115A15d5992A756D003AE74C0b832918fAb75'
-  );
+  const [active, setActive] = useState(1);
+  const [willer, setWiller] = useState(null);
   //read data from contract
-  const { data: willData } = useContractInfiniteReads({
-    cacheKey: 'mlootAttributes',
-    contracts() {
-      const args = [willer];
-      return [
-        { ...willContractConfig, functionName: 'checkDeath', args },
-        { ...willContractConfig, functionName: 'getAllocationAssets', args },
-        { ...willContractConfig, functionName: 'getValidators', args },
-        { ...willContractConfig, functionName: 'getVotingThreshold', args },
-        { ...willContractConfig, functionName: 'getWillStatus', args },
-        { ...willContractConfig, functionName: 'getValidators', args },
-      ];
-    },
-  });
 
-  console.log({ willData });
-  // useEffect(() => {
-  //   const willerInfo = {
-  //     death: willData.pages[0][0],
-  //     asset: willData.pages[0][1],
-  //     validators: willData.pages[0][2],
-  //     treshold: willData.pages[0][3],
-  //     willStatus: willData.pages[0][4],
-  //     validators: willData.pages[0][5],
-  //   };
-  //   console.log(willerInfo);
-  // });
   const { config: ackDeathConfig, error } = usePrepareContractWrite({
     address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
     abi: WILL_ABI,
@@ -118,19 +97,134 @@ function Will() {
     <>
       <Layout>
         <Container
-          // maxWidth="lg"
-          width="100%"
+          maxWidth="md"
           sx={{
             display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            width: 'full',
-            justifyContent: 'start',
-            mt: 6,
-            gap: 2,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            pt: '80px',
           }}
         >
-          {data.map((v, index) => {
+          {active == 1 && (
+            <Stack direction={'row'} justifyContent="center">
+              <Box
+                component={'img'}
+                src="/svg/skull.svg"
+                width={'400px'}
+                height={'400px'}
+                mr={'20px'}
+              />
+              <Stack width={'400px'} justifyContent="center" gap={1}>
+                <Typography
+                  width={'180px'}
+                  fontSize={'64px'}
+                  fontWeight="200"
+                  lineHeight={'64px'}
+                >
+                  Did he/she Die?
+                </Typography>
+                <Typography
+                  fontSize={'15px'}
+                  fontWeight={200}
+                  fontStyle={'italic'}
+                >
+                  Put on address
+                </Typography>
+
+                <TextField
+                  value={willer}
+                  label="Willer Addres"
+                  size="small"
+                  fullWidth
+                  // error={errors?.name?.message}
+                  // helperText={errors?.name?.message}
+                  onChange={(e) => {
+                    setWiller(e.target.value);
+                  }}
+                />
+
+                <Button
+                  size="small"
+                  fullWidth
+                  variant="outlined"
+                  onClick={() => {
+                    setActive(active + 1);
+                  }}
+                >
+                  Index
+                </Button>
+              </Stack>
+            </Stack>
+          )}
+          {active == 2 && (
+            <Stack direction={'row'} justifyContent="center">
+              <Box
+                component={'img'}
+                src="/svg/skull.svg"
+                width={'400px'}
+                height={'400px'}
+                mr={'20px'}
+              />
+              <Stack width={'400px'} justifyContent="center" gap={1}>
+                <Typography
+                  fontSize={'15px'}
+                  fontWeight={200}
+                  fontStyle={'italic'}
+                >
+                  遗嘱状态如下
+                </Typography>
+                <Card sx={{ padding: '10px' }}>
+                  <Typography align="center">确认进度：2/5</Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={Math.floor((2 / 5) * 100)}
+                  />
+                  <Typography align="center">受益人</Typography>
+                </Card>
+
+                <TextField
+                  value={willer}
+                  label="Willer Addres"
+                  size="small"
+                  fullWidth
+                  // error={errors?.name?.message}
+                  // helperText={errors?.name?.message}
+                  onChange={(e) => {
+                    setWiller(e.target.value);
+                  }}
+                />
+
+                <Grid container gap={2}>
+                  <Grid xs={5}>
+                    <Button
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        setActive(active - 1);
+                      }}
+                    >
+                      Pre
+                    </Button>
+                  </Grid>
+                  <Grid xs={5}>
+                    <Button
+                      size="small"
+                      fullWidth
+                      variant="contained"
+                      onClick={() => {
+                        console.log('AckDeath');
+                      }}
+                    >
+                      AckDeath
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Stack>
+            </Stack>
+          )}
+          {/* {data.map((v, index) => {
             return (
               <Card
                 key={index}
@@ -186,7 +280,7 @@ function Will() {
                 </Box>
               </Card>
             );
-          })}
+          })} */}
         </Container>
       </Layout>
     </>
