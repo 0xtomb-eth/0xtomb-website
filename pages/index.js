@@ -1,3 +1,5 @@
+import RemoveIcon from '@mui/icons-material/Remove';
+
 import {
   Box,
   Container,
@@ -5,12 +7,13 @@ import {
   Typography,
   Button,
   Divider,
-  Snackbar,
-  Alert,
+  IconButton,
   Grid,
+  Stack,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WILL_ABI from '../abi/willAbi.json';
 
 import Layout from '../layout/Layout';
@@ -18,8 +21,9 @@ import showMessage from '../components/showMessage';
 import { useContractWrite } from 'wagmi';
 
 function HomePage() {
-  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(1);
   const [beneficiaries, setBeneficiaries] = useState([]);
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     getValues,
@@ -40,14 +44,11 @@ function HomePage() {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!data?.amount) {
-      return;
-    }
-    let fieldValue = [];
+    setLoading(true);
     data.beneficiary = data.beneficiary.map((val) => {
       return val.beneficiary;
     });
-    data.amount = data.amount.map((i) => {
+    data.amount = data.amount?.map((i) => {
       return i.map((j) => j.amount);
     });
     try {
@@ -55,13 +56,19 @@ function HomePage() {
         data.amount.map(async (val) => {
           return await writeAsync?.({
             recklesslySetUnpreparedArgs: [
-              '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+              '0x7Bcf6f55E7136960A5602d6AB6bc163C7D7C4902',
               data.beneficiary,
               val,
             ],
           });
         })
       );
+      showMessage({
+        type: 'success',
+        title: 'Sign Will Success',
+        message: JSON.stringify(res),
+      });
+      setLoading(false);
     } catch (error) {
       console.log(error);
       showMessage({
@@ -69,16 +76,15 @@ function HomePage() {
         title: 'Fail to Tx',
         body: JSON.stringify(error),
       });
+      setLoading(false);
     }
   });
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
+  useEffect(() => {
+    if (!fields.length) {
+      append();
     }
-
-    setOpen(false);
-  };
+  }, [fields]);
 
   return (
     <Layout>
@@ -88,181 +94,339 @@ function HomePage() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          mt: 6,
-          gap: 2,
+          alignItems: 'center',
+          pt: '80px',
         }}
       >
-        <Controller
-          name="name"
-          control={control}
-          rules={{ required: '请输入姓名' }}
-          render={({ field: { onChange, value } }) => (
-            <TextField
-              value={value}
-              label="姓名"
-              error={errors?.name?.message}
-              helperText={errors?.name?.message}
-              onChange={onChange}
+        {active == 1 && (
+          <Stack direction={'row'} justifyContent="center">
+            <Box
+              component={'img'}
+              src="/svg/scroll.svg"
+              width={'400px'}
+              height={'400px'}
+              mr={'20px'}
             />
-          )}
-        />
-        <Controller
-          name="epitaph"
-          control={control}
-          rules={{ required: '请输入墓志铭' }}
-          render={({ field: { onChange, value } }) => (
-            <TextField
-              value={value}
-              label="墓志铭"
-              error={errors?.epitaph?.message}
-              helperText={errors?.epitaph?.message}
-              onChange={onChange}
+            <Stack width={'400px'} justifyContent="center" gap={1}>
+              <Typography
+                width={'180px'}
+                fontSize={'64px'}
+                fontWeight="200"
+                lineHeight={'64px'}
+              >
+                Sign Your Will
+              </Typography>
+              <Typography
+                fontSize={'15px'}
+                fontWeight={200}
+                fontStyle={'italic'}
+              >
+                Sign Your Will Sign Your Will Sign
+              </Typography>
+              <Controller
+                name="name"
+                control={control}
+                rules={{ required: 'Enter your name' }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value}
+                    label="name"
+                    size="small"
+                    fullWidth
+                    error={errors?.name?.message}
+                    helperText={errors?.name?.message}
+                    onChange={onChange}
+                  />
+                )}
+              />
+              <Controller
+                name="epitaph"
+                control={control}
+                rules={{ required: 'Enter your epitaph' }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value}
+                    label="epitaph"
+                    width={'400px'}
+                    size="small"
+                    error={errors?.epitaph?.message}
+                    helperText={errors?.epitaph?.message}
+                    onChange={onChange}
+                  />
+                )}
+              />
+
+              <Button
+                size="small"
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  setActive(active + 1);
+                }}
+              >
+                Next
+              </Button>
+            </Stack>
+          </Stack>
+        )}
+        {active == 2 && (
+          <Stack direction={'row'}>
+            <Box
+              component={'img'}
+              src="/svg/scroll.svg"
+              width={'400px'}
+              height={'400px'}
+              mr={'20px'}
             />
-          )}
-        />
-        <Divider />
-        <Typography>请填入受益人的地址</Typography>
-        {fields.map(({ id }, index) => (
-          <Controller
-            name={`beneficiary[${index}].beneficiary`}
-            control={control}
-            key={id}
-            rules={{ required: '请输入受益人地址' }}
-            render={({ field: { onChange, value } }) => (
-              <Grid container gap={2} alignItems={'center'}>
-                <Grid xs={9}>
-                  <Box>
-                    <TextField
-                      fullWidth
-                      required
-                      value={value}
-                      error={
-                        (errors != undefined) &
-                          (errors?.beneficiary?.length > 0) &&
-                        errors?.beneficiary[index]?.beneficiary?.message
-                      }
-                      helperText={
-                        (errors != undefined) &
-                        (errors?.beneficiary?.length > 0)
-                          ? errors?.beneficiary[index]?.beneficiary?.message
-                          : ''
-                      }
-                      onChange={onChange}
-                      label={`受益方 ${index + 1}`}
-                    />
-                  </Box>
-                </Grid>
-                <Grid xs={1}>
-                  <Button onClick={append} variant="contained">
-                    +
+            <Stack width={'400px'} justifyContent="center" gap={1}>
+              <Typography
+                width={'180px'}
+                fontSize={'64px'}
+                fontWeight="200"
+                lineHeight={'64px'}
+              >
+                Who is beneficiary?
+              </Typography>
+              <Typography
+                fontSize={'15px'}
+                fontWeight={200}
+                fontStyle={'italic'}
+              >
+                Sign Your Will Sign Your Will Sign
+              </Typography>
+              {fields.map(({ id }, index) => (
+                <Controller
+                  name={`beneficiary[${index}].beneficiary`}
+                  control={control}
+                  key={id}
+                  rules={{ required: '请输入受益人地址' }}
+                  render={({ field: { onChange, value } }) => (
+                    <Grid container gap={2} alignItems={'center'}>
+                      <Grid xs={9}>
+                        <Box>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            required
+                            value={value}
+                            error={errors?.beneficiary?.length > 0}
+                            helperText={
+                              errors?.beneficiary?.length > 0
+                                ? errors?.beneficiary[index]?.beneficiary
+                                    ?.message
+                                : ''
+                            }
+                            onChange={onChange}
+                            label={`Beneficiary ${index + 1}`}
+                          />
+                        </Box>
+                      </Grid>
+                      <Grid xs={1}>
+                        <IconButton
+                          color="primary"
+                          size="small"
+                          onClick={append}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </Grid>
+                      <Grid xs={1}>
+                        <IconButton
+                          color="primary"
+                          size="small"
+                          disabled={fields.length == 1}
+                          onClick={() => {
+                            remove(index);
+                          }}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  )}
+                />
+              ))}
+              <Grid container gap={2}>
+                <Grid xs={5}>
+                  <Button
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      setActive(active - 1);
+                    }}
+                  >
+                    Pre
                   </Button>
                 </Grid>
-                <Grid xs={1}>
+                <Grid xs={5}>
                   <Button
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    disabled={!fields.length}
                     onClick={() => {
-                      remove(index);
+                      const b = getValues('beneficiary');
+                      const beneficiaries = b
+                        .map((val) => {
+                          return val.beneficiary;
+                        })
+                        .filter((item) => item != null && item !== '');
+
+                      setBeneficiaries(beneficiaries);
+                      setActive(active + 1);
                     }}
-                    variant="contained"
                   >
-                    -
+                    Next
                   </Button>
                 </Grid>
               </Grid>
-            )}
-          />
-        ))}
+            </Stack>
+          </Stack>
+        )}
+        {active == 3 && (
+          <Stack direction={'row'}>
+            <Box
+              component={'img'}
+              src="/svg/scroll.svg"
+              width={'400px'}
+              height={'400px'}
+              mr={'20px'}
+            />
+            <Stack width={'400px'} justifyContent="center" gap={1}>
+              <Typography
+                width={'300px'}
+                fontSize={'64px'}
+                fontWeight="200"
+                lineHeight={'64px'}
+              >
+                How much they get?
+              </Typography>
+              <Typography
+                fontSize={'15px'}
+                fontWeight={200}
+                fontStyle={'italic'}
+              >
+                Sign Your Will Sign Your Will Sign
+              </Typography>
+              {[{ name: 'ETH' }, { name: 'USDT' }].map((value, index) => {
+                return (
+                  <Grid key={index} container spacing={1}>
+                    <Grid xs={3}>
+                      <Typography>{value.name}</Typography>
+                    </Grid>
+                    <Grid xs={3}>
+                      <Typography>{value.amount}</Typography>
+                    </Grid>
+                    <Grid xs={6} container>
+                      {beneficiaries.map((value, index2) => {
+                        return (
+                          <>
+                            <Grid xs={6} rowSpacing={3}>
+                              <Typography>
+                                {value?.slice(0, 5) +
+                                  '...' +
+                                  value?.slice(-5, -1)}
+                              </Typography>
+                            </Grid>
+                            <Grid xs={6}>
+                              <Controller
+                                name={`amount.${index}.${index2}.amount`}
+                                control={control}
+                                rules={{
+                                  required: '请输入分配比例',
+                                }}
+                                render={({ field: { onChange, value } }) => (
+                                  <TextField
+                                    sx={{ mb: '5px' }}
+                                    value={value}
+                                    onChange={onChange}
+                                    size={'small'}
+                                    error={
+                                      errors?.amount &&
+                                      errors?.amount[index] &&
+                                      errors?.amount[index][index2]
+                                    }
+                                    helperText={
+                                      errors?.amount &&
+                                      errors?.amount[index] &&
+                                      errors?.amount[index][index2]
+                                        ? errors?.amount[index][index2].amount
+                                            .message
+                                        : ''
+                                    }
+                                  />
+                                )}
+                              />
+                            </Grid>
+                          </>
+                        );
+                      })}
+                    </Grid>
+                  </Grid>
+                );
+              })}
+              <Divider />
 
-        <Button onClick={append}>Add Field</Button>
-        <Button
-          disabled={!fields.length}
-          onClick={() => {
-            const b = getValues('beneficiary');
-            const beneficiaries = b
-              .map((val) => {
-                return val.beneficiary;
-              })
-              .filter((item) => item != null && item !== '');
-            if (beneficiaries.length == 0) {
-              onSubmit();
-            }
-            setBeneficiaries(beneficiaries);
+              <Grid container gap={2}>
+                <Grid xs={5}>
+                  <Button
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    onClick={() => {
+                      setActive(active - 1);
+                    }}
+                  >
+                    Pre
+                  </Button>
+                </Grid>
+                <Grid xs={5}>
+                  <Button
+                    size="small"
+                    fullWidth
+                    variant="contained"
+                    onClick={onSubmit}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </Stack>
+          </Stack>
+        )}
+        <Box
+          className="bigline"
+          sx={{
+            position: 'absolute',
+            bottom: '100px',
+            width: '100vw',
+            display: 'flex',
+            justifyContent: 'center',
+            px: '10px',
           }}
         >
-          Confirm beneficiary
-        </Button>
-        <Divider />
-        <Typography>资产分配</Typography>
-        {[{ name: 'ETH' }, { name: 'USDT' }].map((value, index) => {
-          return (
-            <Grid key={index} container spacing={1}>
-              <Grid xs={3}>
-                <Typography>{value.name}</Typography>
-              </Grid>
-              <Grid xs={3}>
-                <Typography>{value.amount}</Typography>
-              </Grid>
-              <Grid xs={6} container>
-                {beneficiaries.map((value, index2) => {
-                  return (
-                    <>
-                      <Grid xs={6} rowSpacing={3}>
-                        <Typography>
-                          {value?.slice(0, 5) + '...' + value?.slice(-5, -1)}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}>
-                        <Controller
-                          name={`amount.${index}.${index2}.amount`}
-                          control={control}
-                          rules={{
-                            required: '请输入分配比例',
-                          }}
-                          render={({ field: { onChange, value } }) => (
-                            <TextField
-                              value={value}
-                              onChange={onChange}
-                              size={'small'}
-                              error={
-                                errors?.amount &&
-                                errors?.amount[index] &&
-                                errors?.amount[index][index2]
-                              }
-                              helperText={
-                                errors?.amount &&
-                                errors?.amount[index] &&
-                                errors?.amount[index][index2]
-                                  ? errors?.amount[index][index2].amount.message
-                                  : ''
-                              }
-                            />
-                          )}
-                        />
-                      </Grid>
-                    </>
-                  );
-                })}
-              </Grid>
-            </Grid>
-          );
-        })}
-        <Divider />
-        <Button variant="contained" onClick={onSubmit}>
-          Submit
-        </Button>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={open}
-          autoHideDuration={1000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClose={handleClose}
-            severity="success"
-            sx={{ width: '100%' }}
+          <Box
+            sx={{
+              width: '50%',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
           >
-            Send Success
-          </Alert>
-        </Snackbar>
+            {['Sign Your Will', 'Who is beneficiary', 'How much they get'].map(
+              (v, index) => (
+                <Typography
+                  key={index}
+                  fontStyle={active == index + 1 ? '' : 'italic'}
+                  color={active == index + 1 ? 'black' : '#a2a9b4'}
+                  textTransform={'capitalize'}
+                >
+                  {v}
+                </Typography>
+              )
+            )}
+          </Box>
+        </Box>
       </Container>
     </Layout>
   );

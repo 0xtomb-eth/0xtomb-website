@@ -41,51 +41,54 @@ const Header = () => {
     <>
       <Box
         display="flex"
+        position="sticky"
+        top={0}
         alignItems="center"
+        px={8}
         justifyContent="space-between"
-        height={{ md: '88px' }}
-        maxWidth="1216px"
+        height={'100px'}
+        width="100vw"
         marginX={{ lg: 'auto', md: '20px', xs: '20px' }}
-        borderBottom="1px solid black"
       >
-        <Box
-          component={'img'}
-          src="/svg/logo.svg"
-          width={'35px'}
-          height={'35px'}
-        ></Box>
-        <Box
-          gap={4}
-          display={{ md: 'flex', sm: 'none', xs: 'none' }}
-          fontSize={2}
-          lineHeight={3}
-        >
-          <Typography
-            sx={{ cursor: 'pointer' }}
-            onClick={() => {
-              router.push('/');
-            }}
-          >
-            签署遗嘱📜
+        <Box display="flex" justifyContent="center" alignItems={'center'}>
+          <Box
+            component={'img'}
+            src="/svg/logo.svg"
+            width={'35px'}
+            height={'35px'}
+          ></Box>
+          <Typography variant="h5" sx={{ ml: '10px' }} fontWeight={'800'}>
+            0xTomb
           </Typography>
-          <Typography
-            sx={{ cursor: 'pointer' }}
-            onClick={() => {
-              router.push('/will');
-            }}
-          >
-            确认死亡💀
-          </Typography>
-          <Typography
-            sx={{ cursor: 'pointer' }}
-            onClick={() => {
-              router.push('/cemetery');
-            }}
-          >
-            墓园🪦
-          </Typography>
+          <Box gap={4} display={'flex'} fontSize={2} lineHeight={3} ml={'40px'}>
+            {[
+              { path: '/', title: 'Sign' },
+              { path: '/will', title: 'Confirm' },
+              { path: '/cemetery', title: 'Cemetery' },
+            ].map((val, index) => {
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    fontSize: '20px',
+                    lineHeight: '40px',
+                    color: 'white',
+                    px: '16px',
+                    fontWeight: '400',
+                    transform: 'skewX(-10deg)',
+                    background: 'black',
+                  }}
+                  onClick={() => {
+                    router.push(val.path);
+                  }}
+                >
+                  {val.title}
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
-        <Box display="flex" gap="40px">
+        <Box display="flex">
           <ConnectButton />
         </Box>
       </Box>

@@ -19,7 +19,7 @@ export default function Layout({ children, title, description }) {
       <CssBaseline />
       <Box>
         <Header />
-        <Box minHeight={'100vh'}>{children}</Box>
+        <Box height={'calc(100vh - 100px)'}>{children}</Box>
       </Box>
     </>
   );
