@@ -31,28 +31,39 @@ const willContractConfig = {
 };
 
 function Will() {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(2);
+  const [death, setDeath] = useState(false);
+  const [executed, setExecuted] = useState(false);
   const [willer, setWiller] = useState(null);
   const [validators, setValidators] = useState([
-    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
-    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
-    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
     '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
     '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
   ]);
   const [allocations, setAllocations] = useState([
     {
-      tokenAddress: '0x1',
+      token: 'ABC',
       allocation: [
-        { beneficiaries: '0x1123', percentages: '0x123' },
-        { beneficiaries: '0x1122', percentages: '0x12' },
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '30',
+        },
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '70',
+        },
       ],
     },
     {
-      tokenAddress: '0x2',
+      token: 'DEF',
       allocation: [
-        { beneficiaries: '0x113', percentages: '0x123' },
-        { beneficiaries: '0x112', percentages: '0x12' },
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '80',
+        },
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '20',
+        },
       ],
     },
   ]);
@@ -66,56 +77,6 @@ function Will() {
   });
   const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
 
-  const data = [
-    {
-      name: 'Alice',
-      approved: 1,
-      total: 10,
-      content:
-        '当你们看到这个文件时，我已经离开了这个世界。在这个世界上我度过了美好的时光，与你们分享了许多乐趣与欢笑，但是生命的尽头终将会到来。\n\n首先，我要感谢我的父母，在他们的爱和关心下我度过了美好的童年和青春年华。我要感谢我的配偶和孩子，你们是我生命中最重要的人，曾经我花费了你们很多时间和精力，但是我真诚地希望你们知道这是我毕生的愿望，为你们付出一切都是值得的。\n\n我相信你们会在没有我存在的日子里继续生活，对于我的离开，请你们不要过于悲伤，更不用自责。我一直在你们心中，我的生命和回忆将与你们永远在一起。\n\n在此，我希望我的遗愿能得以执行：\n\n1.我希望我的遗体能够捐献给科学研究，以期能够为医学研究作出贡献。\n\n2.我希望我的家人和朋友之间能够和睦相处，不要因我的离去而产生隔阂或争端。\n\n3.关于财产分配，我已经做出了安排，希望大家都能够理解和尊重我的决定。\n\n最后，我想告诉你们，我虽然已经离开了这个世界，但是我的爱和关心会一直传递到你们的心中，让你们始终享有温暖和快乐。\n\n再次感谢你们，祝你们幸福安康。',
-      beneficiaries: [],
-    },
-    {
-      name: 'Bob',
-      approved: 1,
-      total: 10,
-      content:
-        '当你们看到这个文件时，我已经离开了这个世界。在这个世界上我度过了美好的时光，与你们分享了许多乐趣与欢笑，但是生命的尽头终将会到来。\n\n首先，我要感谢我的父母，在他们的爱和关心下我度过了美好的童年和青春年华。我要感谢我的配偶和孩子，你们是我生命中最重要的人，曾经我花费了你们很多时间和精力，但是我真诚地希望你们知道这是我毕生的愿望，为你们付出一切都是值得的。\n\n我相信你们会在没有我存在的日子里继续生活，对于我的离开，请你们不要过于悲伤，更不用自责。我一直在你们心中，我的生命和回忆将与你们永远在一起。\n\n在此，我希望我的遗愿能得以执行：\n\n1.我希望我的遗体能够捐献给科学研究，以期能够为医学研究作出贡献。\n\n2.我希望我的家人和朋友之间能够和睦相处，不要因我的离去而产生隔阂或争端。\n\n3.关于财产分配，我已经做出了安排，希望大家都能够理解和尊重我的决定。\n\n最后，我想告诉你们，我虽然已经离开了这个世界，但是我的爱和关心会一直传递到你们的心中，让你们始终享有温暖和快乐。\n\n再次感谢你们，祝你们幸福安康。',
-      beneficiaries: [],
-    },
-    {
-      name: 'Charlie',
-      approved: 1,
-      total: 10,
-      content:
-        '当你们看到这个文件时，我已经离开了这个世界。在这个世界上我度过了美好的时光，与你们分享了许多乐趣与欢笑，但是生命的尽头终将会到来。\n\n首先，我要感谢我的父母，在他们的爱和关心下我度过了美好的童年和青春年华。我要感谢我的配偶和孩子，你们是我生命中最重要的人，曾经我花费了你们很多时间和精力，但是我真诚地希望你们知道这是我毕生的愿望，为你们付出一切都是值得的。\n\n我相信你们会在没有我存在的日子里继续生活，对于我的离开，请你们不要过于悲伤，更不用自责。我一直在你们心中，我的生命和回忆将与你们永远在一起。\n\n在此，我希望我的遗愿能得以执行：\n\n1.我希望我的遗体能够捐献给科学研究，以期能够为医学研究作出贡献。\n\n2.我希望我的家人和朋友之间能够和睦相处，不要因我的离去而产生隔阂或争端。\n\n3.关于财产分配，我已经做出了安排，希望大家都能够理解和尊重我的决定。\n\n最后，我想告诉你们，我虽然已经离开了这个世界，但是我的爱和关心会一直传递到你们的心中，让你们始终享有温暖和快乐。\n\n再次感谢你们，祝你们幸福安康。',
-      beneficiaries: [],
-    },
-    {
-      name: 'David',
-      approved: 1,
-      total: 10,
-      content:
-        '当你们看到这个文件时，我已经离开了这个世界。在这个世界上我度过了美好的时光，与你们分享了许多乐趣与欢笑，但是生命的尽头终将会到来。\n\n首先，我要感谢我的父母，在他们的爱和关心下我度过了美好的童年和青春年华。我要感谢我的配偶和孩子，你们是我生命中最重要的人，曾经我花费了你们很多时间和精力，但是我真诚地希望你们知道这是我毕生的愿望，为你们付出一切都是值得的。\n\n我相信你们会在没有我存在的日子里继续生活，对于我的离开，请你们不要过于悲伤，更不用自责。我一直在你们心中，我的生命和回忆将与你们永远在一起。\n\n在此，我希望我的遗愿能得以执行：\n\n1.我希望我的遗体能够捐献给科学研究，以期能够为医学研究作出贡献。\n\n2.我希望我的家人和朋友之间能够和睦相处，不要因我的离去而产生隔阂或争端。\n\n3.关于财产分配，我已经做出了安排，希望大家都能够理解和尊重我的决定。\n\n最后，我想告诉你们，我虽然已经离开了这个世界，但是我的爱和关心会一直传递到你们的心中，让你们始终享有温暖和快乐。\n\n再次感谢你们，祝你们幸福安康。',
-      beneficiaries: [],
-    },
-    {
-      name: 'Emma',
-      approved: 1,
-      total: 10,
-      content:
-        '当你们看到这个文件时，我已经离开了这个世界。在这个世界上我度过了美好的时光，与你们分享了许多乐趣与欢笑，但是生命的尽头终将会到来。\n\n首先，我要感谢我的父母，在他们的爱和关心下我度过了美好的童年和青春年华。我要感谢我的配偶和孩子，你们是我生命中最重要的人，曾经我花费了你们很多时间和精力，但是我真诚地希望你们知道这是我毕生的愿望，为你们付出一切都是值得的。\n\n我相信你们会在没有我存在的日子里继续生活，对于我的离开，请你们不要过于悲伤，更不用自责。我一直在你们心中，我的生命和回忆将与你们永远在一起。\n\n在此，我希望我的遗愿能得以执行：\n\n1.我希望我的遗体能够捐献给科学研究，以期能够为医学研究作出贡献。\n\n2.我希望我的家人和朋友之间能够和睦相处，不要因我的离去而产生隔阂或争端。\n\n3.关于财产分配，我已经做出了安排，希望大家都能够理解和尊重我的决定。\n\n最后，我想告诉你们，我虽然已经离开了这个世界，但是我的爱和关心会一直传递到你们的心中，让你们始终享有温暖和快乐。\n\n再次感谢你们，祝你们幸福安康。',
-      beneficiaries: [],
-    },
-    {
-      name: 'Frank',
-      approved: 1,
-      total: 10,
-      content:
-        '当你们看到这个文件时，我已经离开了这个世界。在这个世界上我度过了美好的时光，与你们分享了许多乐趣与欢笑，但是生命的尽头终将会到来。\n\n首先，我要感谢我的父母，在他们的爱和关心下我度过了美好的童年和青春年华。我要感谢我的配偶和孩子，你们是我生命中最重要的人，曾经我花费了你们很多时间和精力，但是我真诚地希望你们知道这是我毕生的愿望，为你们付出一切都是值得的。\n\n我相信你们会在没有我存在的日子里继续生活，对于我的离开，请你们不要过于悲伤，更不用自责。我一直在你们心中，我的生命和回忆将与你们永远在一起。\n\n在此，我希望我的遗愿能得以执行：\n\n1.我希望我的遗体能够捐献给科学研究，以期能够为医学研究作出贡献。\n\n2.我希望我的家人和朋友之间能够和睦相处，不要因我的离去而产生隔阂或争端。\n\n3.关于财产分配，我已经做出了安排，希望大家都能够理解和尊重我的决定。\n\n最后，我想告诉你们，我虽然已经离开了这个世界，但是我的爱和关心会一直传递到你们的心中，让你们始终享有温暖和快乐。\n\n再次感谢你们，祝你们幸福安康。',
-      beneficiaries: [],
-    },
-  ];
   return (
     <>
       <Layout>
@@ -197,34 +158,83 @@ function Will() {
                 >
                   遗嘱状态如下
                 </Typography>
-                <Card sx={{ padding: '10px' }}>
+                <Card
+                  sx={{
+                    padding: '10px',
+                  }}
+                >
                   <Typography align="center">确认进度：2/5</Typography>
+                  <Typography align="center">触发阈值：3</Typography>
+                  <Box
+                    display={'flex'}
+                    justifyContent={'center'}
+                    gap={1}
+                    my={1}
+                  >
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="error"
+                      padding={0}
+                      sx={{ padding: 0 }}
+                    >
+                      {executed ? 'executed' : 'not execute'}
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color={death ? 'error' : 'success'}
+                      sx={{ padding: 0 }}
+                    >
+                      {death ? 'dead' : 'not dead'}
+                    </Button>
+                  </Box>
                   <LinearProgress
                     variant="determinate"
                     value={Math.floor((2 / 5) * 100)}
                   />
-                  <Typography align="center">验证者</Typography>
+                  <Typography align="center" mt={2}>
+                    验证者
+                  </Typography>
                   {validators.map((val, index) => (
                     <Typography key={index} variant="body2" align="center">
                       {val.slice(0, 20) + '...' + val.slice(-15, -1)}
                       {/* {val} */}
                     </Typography>
                   ))}
-                </Card>
-
-                <TextField
-                  value={willer}
-                  label="Willer Addres"
-                  size="small"
-                  fullWidth
-                  // error={errors?.name?.message}
-                  // helperText={errors?.name?.message}
-                  onChange={(e) => {
-                    setWiller(e.target.value);
-                  }}
-                />
-                <Grid container gap={2}>
-                  <Grid xs={5}>
+                  <Typography align="center" mt={2}>
+                    受益人
+                  </Typography>
+                  {allocations.map((val, index) => (
+                    <Grid container key={index} sx={12}>
+                      <Grid xs={3}>{val.token}</Grid>
+                      <Grid xs={9} container>
+                        {val.allocation.map((v, i) => {
+                          return (
+                            <>
+                              <Grid xs={6}>
+                                <Typography align="right">
+                                  {v.beneficiaries.slice(0, 4) +
+                                    '...' +
+                                    v.beneficiaries.slice(-5, -1)}
+                                </Typography>
+                              </Grid>
+                              <Grid xs={6}>
+                                <Typography align="right">
+                                  {v.percentages}%
+                                </Typography>
+                              </Grid>
+                            </>
+                          );
+                        })}
+                      </Grid>
+                    </Grid>
+                    // <Typography key={index} variant="body2" align="center">
+                    //   {val.slice(0, 20) + '...' + val.slice(-15, -1)}
+                    //   {/* {val} */}
+                    // </Typography>
+                  ))}
+                  <Box display={'flex'} gap={1} mt={2}>
                     <Button
                       fullWidth
                       size="small"
@@ -235,8 +245,7 @@ function Will() {
                     >
                       Pre
                     </Button>
-                  </Grid>
-                  <Grid xs={5}>
+
                     <Button
                       size="small"
                       fullWidth
@@ -247,68 +256,11 @@ function Will() {
                     >
                       AckDeath
                     </Button>
-                  </Grid>
-                </Grid>
+                  </Box>
+                </Card>
               </Stack>
             </Stack>
           )}
-          {/* {data.map((v, index) => {
-            return (
-              <Card
-                key={index}
-                onClick={() => {}}
-                sx={{
-                  width: 270,
-                  height: 200,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <Box component={'img'} src="/svg/skull.svg" width="50px" />
-                <Box
-                  sx={{
-                    display: 'flex',
-                    textAlign: 'center',
-                    fontSize: '30px',
-                    lineHeight: '40px',
-                  }}
-                >
-                  {v.name}的死亡证明
-                </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    textAlign: 'center',
-                    fontSize: '15px',
-                    mb: '5px',
-                  }}
-                >
-                  确认进度
-                </Box>
-                <Box width={'80%'}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={Math.floor((v.approved / v.total) * 100)}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    textAlign: 'center',
-                    fontSize: '10px',
-                  }}
-                >
-                  {v.approved}/{v.total}
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Button>确认死亡</Button>
-                </Box>
-              </Card>
-            );
-          })} */}
         </Container>
       </Layout>
     </>
