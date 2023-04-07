@@ -207,9 +207,9 @@ function HomePage() {
               >
                 Sign Your Will Sign Your Will Sign
               </Typography>
-              {fields.map(({ id }, index) => (
+              {validatorField.map(({ id }, index) => (
                 <Controller
-                  name={`[${index}].validator`}
+                  name={`validator.[${index}].validator`}
                   control={control}
                   key={id}
                   rules={{ required: '请输入验证者地址' }}
@@ -222,13 +222,6 @@ function HomePage() {
                             size="small"
                             required
                             value={value}
-                            // error={errors?.beneficiary?.length > 0}
-                            // helperText={
-                            //   errors?.beneficiary?.length > 0
-                            //     ? errors?.beneficiary[index]?.beneficiary
-                            //         ?.message
-                            //     : ''
-                            // }
                             onChange={onChange}
                             label={`Validator ${index + 1}`}
                           />
@@ -279,14 +272,6 @@ function HomePage() {
                     variant="outlined"
                     disabled={!fields.length}
                     onClick={() => {
-                      const b = getValues('beneficiary');
-                      const beneficiaries = b
-                        .map((val) => {
-                          return val.beneficiary;
-                        })
-                        .filter((item) => item != null && item !== '');
-
-                      setBeneficiaries(beneficiaries);
                       setActive(active + 1);
                     }}
                   >

@@ -33,6 +33,29 @@ const willContractConfig = {
 function Will() {
   const [active, setActive] = useState(1);
   const [willer, setWiller] = useState(null);
+  const [validators, setValidators] = useState([
+    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+  ]);
+  const [allocations, setAllocations] = useState([
+    {
+      tokenAddress: '0x1',
+      allocation: [
+        { beneficiaries: '0x1123', percentages: '0x123' },
+        { beneficiaries: '0x1122', percentages: '0x12' },
+      ],
+    },
+    {
+      tokenAddress: '0x2',
+      allocation: [
+        { beneficiaries: '0x113', percentages: '0x123' },
+        { beneficiaries: '0x112', percentages: '0x12' },
+      ],
+    },
+  ]);
   //read data from contract
 
   const { config: ackDeathConfig, error } = usePrepareContractWrite({
@@ -180,7 +203,13 @@ function Will() {
                     variant="determinate"
                     value={Math.floor((2 / 5) * 100)}
                   />
-                  <Typography align="center">受益人</Typography>
+                  <Typography align="center">验证者</Typography>
+                  {validators.map((val, index) => (
+                    <Typography key={index} variant="body2" align="center">
+                      {val.slice(0, 20) + '...' + val.slice(-15, -1)}
+                      {/* {val} */}
+                    </Typography>
+                  ))}
                 </Card>
 
                 <TextField
@@ -194,7 +223,6 @@ function Will() {
                     setWiller(e.target.value);
                   }}
                 />
-
                 <Grid container gap={2}>
                   <Grid xs={5}>
                     <Button
