@@ -24,14 +24,23 @@ function Cemetery() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(0);
 
-  const {
-    data: tombs,
-    isError,
-    isLoading,
-  } = useContractRead({
+  const { data: totalDate } = useContractRead({
     address: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
     abi: WILL_ABI,
-    functionName: 'readTombs',
+    functionName: 'totalTokens',
+  });
+  const nftConfig = {
+    address: '0x1dfe7ca09e99d10835bf73044a23b73fc20623df',
+    abi: mlootABI,
+    functionName: 'gettoken',
+  };
+  const { data: nftList } = useContractReads({
+    contracts: Array.from({ from: totalDate }, (_, i) => i).map((val) => {
+      return {
+        ...nftConfig,
+        args: [val],
+      };
+    }),
   });
 
   const handleClickOpen = () => {
