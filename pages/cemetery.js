@@ -13,6 +13,8 @@ import {
 import Layout from '../layout/Layout';
 import React from 'react';
 import { useState } from 'react';
+import { useContractRead } from 'wagmi';
+import WILL_ABI from '../abi/willAbi.json';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,6 +23,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function Cemetery() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(0);
+
+  const {
+    data: tombs,
+    isError,
+    isLoading,
+  } = useContractRead({
+    address: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
+    abi: WILL_ABI,
+    functionName: 'readTombs',
+  });
 
   const handleClickOpen = () => {
     setOpen(true);

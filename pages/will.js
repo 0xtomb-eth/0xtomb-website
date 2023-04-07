@@ -1,26 +1,69 @@
 import {
   Box,
   Container,
-  DialogContentText,
-  DialogContent,
   LinearProgress,
-  DialogActions,
-  DialogTitle,
-  Dialog,
   Button,
   Card,
   Slide,
 } from '@mui/material';
 import Layout from '../layout/Layout';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
+import {
+  useContractInfiniteReads,
+  useContractWrite,
+  usePrepareContractWrite,
+} from 'wagmi';
+import WILL_ABI from '../abi/willAbi.json';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+const willContractConfig = {
+  address: '0x1dfe7ca09e99d10835bf73044a23b73fc20623df',
+  abi: WILL_ABI,
+};
 
 function Will() {
+  const [willer, setWiller] = useState(
+    '0xb15115A15d5992A756D003AE74C0b832918fAb75'
+  );
   //read data from contract
+  const { data: willData } = useContractInfiniteReads({
+    cacheKey: 'mlootAttributes',
+    contracts() {
+      const args = [willer];
+      return [
+        { ...willContractConfig, functionName: 'checkDeath', args },
+        { ...willContractConfig, functionName: 'getAllocationAssets', args },
+        { ...willContractConfig, functionName: 'getValidators', args },
+        { ...willContractConfig, functionName: 'getVotingThreshold', args },
+        { ...willContractConfig, functionName: 'getWillStatus', args },
+        { ...willContractConfig, functionName: 'getValidators', args },
+      ];
+    },
+  });
+
+  console.log({ willData });
+  // useEffect(() => {
+  //   const willerInfo = {
+  //     death: willData.pages[0][0],
+  //     asset: willData.pages[0][1],
+  //     validators: willData.pages[0][2],
+  //     treshold: willData.pages[0][3],
+  //     willStatus: willData.pages[0][4],
+  //     validators: willData.pages[0][5],
+  //   };
+  //   console.log(willerInfo);
+  // });
+  const { config: ackDeathConfig, error } = usePrepareContractWrite({
+    address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+    abi: WILL_ABI,
+    functionName: 'ackDeath',
+    args: [willer, true],
+  });
+  const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
+
   const data = [
     {
       name: 'Alice',
