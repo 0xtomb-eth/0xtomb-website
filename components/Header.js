@@ -74,7 +74,7 @@ const Header = () => {
           <Typography
             sx={{ cursor: 'pointer' }}
             onClick={() => {
-              router.push('/cemetary');
+              router.push('/cemetery');
             }}
           >
             墓园
