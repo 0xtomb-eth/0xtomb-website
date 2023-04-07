@@ -41,10 +41,11 @@ export default function MintTomb() {
           image: `ipfs://${cid}`,
         })
       );
-      const res = await writeAsync?.({
-        recklesslySetUnpreparedArgs: ['data:application/json;base64,' + data],
-      });
-      console.log(res);
+      console.log(cid);
+      // const res = await writeAsync?.({
+      //   recklesslySetUnpreparedArgs: ['data:application/json;base64,' + data],
+      // });
+      // console.log(res);
       setMintLoading(false);
     } catch (err) {
       console.log(err);

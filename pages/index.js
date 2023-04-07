@@ -1,34 +1,24 @@
 import {
   Box,
   Container,
-  Select,
   TextField,
-  InputLabel,
-  MenuItem,
-  FormControl,
   Typography,
   Button,
   Divider,
   Snackbar,
   Alert,
-  Stack,
-  List,
-  ListItem,
   Grid,
 } from '@mui/material';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import WILL_ABI from '../abi/willAbi.json';
 
 import Layout from '../layout/Layout';
 import showMessage from '../components/showMessage';
-import { usePrepareContractWrite, useContractWrite } from 'wagmi';
+import { useContractWrite } from 'wagmi';
 
 function HomePage() {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [sendMesaage, setSendMesaage] = useState('');
-  const [processedEmail, setProcessedEmail] = useState('');
   const [beneficiaries, setBeneficiaries] = useState([]);
   const {
     handleSubmit,
@@ -37,12 +27,10 @@ function HomePage() {
     formState: { errors },
   } = useForm();
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control, // control props comes from useForm (optional: if you are using FormContext)
-      name: 'beneficiary', // unique name for your Field Array
-    }
-  );
+  const { fields, append, remove } = useFieldArray({
+    control, // control props comes from useForm (optional: if you are using FormContext)
+    name: 'beneficiary', // unique name for your Field Array
+  });
 
   const { data, writeAsync } = useContractWrite({
     address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',

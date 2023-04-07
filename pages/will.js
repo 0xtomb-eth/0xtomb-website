@@ -1,30 +1,14 @@
 import {
   Box,
   Container,
-  Select,
-  TextField,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Typography,
   DialogContentText,
   DialogContent,
   LinearProgress,
   DialogActions,
   DialogTitle,
   Dialog,
-  CardMedia,
   Button,
-  Divider,
-  Snackbar,
-  Alert,
-  Stack,
-  List,
-  ListItem,
-  Grid,
   Card,
-  CardContent,
-  CardActionArea,
   Slide,
 } from '@mui/material';
 import Layout from '../layout/Layout';
@@ -36,16 +20,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function Will() {
-  const [open, setOpen] = useState(false);
-  const [current, setCurrent] = useState(0);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
   //read data from contract
   const data = [
     {
@@ -100,16 +74,6 @@ function Will() {
   return (
     <>
       <Layout>
-        <Box
-          sx={{
-            position: 'fixed',
-            width: '80px',
-            buttom: 0,
-            border: '1px solid black',
-          }}
-        >
-          * todo： * 遗嘱隐私保护 * 签名 * 读合约
-        </Box>
         <Container
           // maxWidth="lg"
           width="100%"
@@ -127,7 +91,7 @@ function Will() {
             return (
               <Card
                 key={index}
-                onClick={handleClickOpen}
+                onClick={() => {}}
                 sx={{
                   width: 270,
                   height: 200,
@@ -138,18 +102,7 @@ function Will() {
                   cursor: 'pointer',
                 }}
               >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    textAlign: 'center',
-                    fontSize: '30px',
-                    fontWeight: 800,
-                    transform: 'scaleY(2.5)',
-                    mb: '10px',
-                  }}
-                >
-                  +
-                </Box>
+                <Box component={'img'} src="/svg/skull.svg" width="50px" />
                 <Box
                   sx={{
                     display: 'flex',
@@ -158,7 +111,7 @@ function Will() {
                     lineHeight: '40px',
                   }}
                 >
-                  {v.name}的遗嘱
+                  {v.name}的死亡证明
                 </Box>
                 <Box
                   sx={{
@@ -174,7 +127,6 @@ function Will() {
                   <LinearProgress
                     variant="determinate"
                     value={Math.floor((v.approved / v.total) * 100)}
-                    // value={12}
                   />
                 </Box>
                 <Box
@@ -186,32 +138,14 @@ function Will() {
                 >
                   {v.approved}/{v.total}
                 </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button>确认死亡</Button>
+                </Box>
               </Card>
             );
           })}
         </Container>
       </Layout>
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{data?.length && data[current].name}的遗嘱</DialogTitle>
-        <DialogContent>
-          <DialogContentText
-            id="alert-dialog-slide-description"
-            sx={{ whiteSpace: 'pre-line' }}
-          >
-            {data?.length && data[current].content}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose}>Agree</Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }

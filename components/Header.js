@@ -48,7 +48,12 @@ const Header = () => {
         marginX={{ lg: 'auto', md: '20px', xs: '20px' }}
         borderBottom="1px solid black"
       >
-        <Box display="flex">LOGO</Box>
+        <Box
+          component={'img'}
+          src="/svg/logo.svg"
+          width={'35px'}
+          height={'35px'}
+        ></Box>
         <Box
           gap={4}
           display={{ md: 'flex', sm: 'none', xs: 'none' }}
@@ -61,7 +66,7 @@ const Header = () => {
               router.push('/');
             }}
           >
-            签署遗嘱
+            签署遗嘱📜
           </Typography>
           <Typography
             sx={{ cursor: 'pointer' }}
@@ -69,7 +74,7 @@ const Header = () => {
               router.push('/will');
             }}
           >
-            确认遗嘱
+            确认死亡💀
           </Typography>
           <Typography
             sx={{ cursor: 'pointer' }}
@@ -77,7 +82,7 @@ const Header = () => {
               router.push('/cemetery');
             }}
           >
-            墓园
+            墓园🪦
           </Typography>
         </Box>
         <Box display="flex" gap="40px">
