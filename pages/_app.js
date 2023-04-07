@@ -11,7 +11,7 @@ import '../styles/globals.css';
 
 const { chains, provider } = configureChains(
   // [mainnet, polygon, optimism, arbitrum],
-  [goerli],
+  [polygon],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
 );
 

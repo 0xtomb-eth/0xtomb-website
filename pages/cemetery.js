@@ -13,7 +13,7 @@ import {
 import Layout from '../layout/Layout';
 import React from 'react';
 import { useState } from 'react';
-import { useContractRead } from 'wagmi';
+import { useContractRead, useContractReads } from 'wagmi';
 import WILL_ABI from '../abi/willAbi.json';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -31,7 +31,7 @@ function Cemetery() {
   });
   const nftConfig = {
     address: '0x1dfe7ca09e99d10835bf73044a23b73fc20623df',
-    abi: mlootABI,
+    abi: WILL_ABI,
     functionName: 'gettoken',
   };
   const { data: nftList } = useContractReads({
