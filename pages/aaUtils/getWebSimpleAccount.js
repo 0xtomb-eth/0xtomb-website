@@ -1,6 +1,9 @@
 import { ethers } from 'ethers';
 import { SimpleAccountAPI, PaymasterAPI } from '@account-abstraction/sdk';
 import { JsonRpcProvider } from '@ethersproject/providers';
+//useSWR allows the use of SWR inside function components
+
+
 
 import {
   getVerifyingPaymaster,

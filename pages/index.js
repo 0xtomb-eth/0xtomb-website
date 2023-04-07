@@ -18,9 +18,15 @@ import WILL_ABI from '../abi/willAbi.json';
 
 import Layout from '../layout/Layout';
 import showMessage from '../components/showMessage';
-import { useContractWrite } from 'wagmi';
+import { handleSubmitWill } from './aaUtils/handleSubmitWill';
+import useSWR from 'swr';
+//Write a fetcher function to wrap the native fetch function and return the result of a call to url in json format
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function HomePage() {
+  // request contract abi from api 
+const { will_abi, error } = useSWR('/api/staticdata', fetcher);
+
   const [active, setActive] = useState(1);
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,16 +51,15 @@ function HomePage() {
     name: 'validator', // unique name for your Field Array
   });
 
-  const { data, writeAsync } = useContractWrite({
-    address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
-    abi: WILL_ABI,
-    functionName: 'setAllocation',
-    mode: 'recklesslyUnprepared',
-  });
+  // const { data, writeAsync } = useContractWrite({
+  //   address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+  //   abi: WILL_ABI,
+  //   functionName: 'setAllocation',
+  //   mode: 'recklesslyUnprepared',
+  // });
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
-    console.log(data);
     data.beneficiary = data.beneficiary.map((val) => {
       return val.beneficiary;
     });
@@ -64,6 +69,14 @@ function HomePage() {
     data.amount = data.amount?.map((i) => {
       return i.map((j) => j.amount);
     });
+    // test ERC20: 0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e
+    // test ERC20: 0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1
+    data.assets = [
+      '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
+      '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1',
+    ];
+    data.threshold = 3;
+    handleSubmitWill(data);
     // try {
     //   const res = await Promise.all(
     //     data.amount.map(async (val) => {
@@ -98,6 +111,12 @@ function HomePage() {
       append();
     }
   }, [fields]);
+
+  useEffect(() => {
+    if (!validatorField.length) {
+      validatorAppend();
+    }
+  }, [validatorField]);
 
   return (
     <Layout>
