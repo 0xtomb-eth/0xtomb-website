@@ -37,7 +37,6 @@ const accountAPI = await getWebSimpleAccount(
   // if use metamask provider
   //   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
-
   const willAddress = ethers.utils.getAddress(accountAPI.getCounterFactualAddress());
   const wililbase = new ethers.Contract(willAddress, WILL_CONTRACT, provider);
   wililbase.interface.encodeFunctionData('setAllocation', [
