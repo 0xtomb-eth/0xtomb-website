@@ -90,6 +90,7 @@ async function batchTransferERC20(
   console.log(`Transaction hash: ${txHash}`);
   return msg;
 }
+
 const handleConnect = async () => {
   // debugger;
   const accountAPI = await getWebSimpleAccount(

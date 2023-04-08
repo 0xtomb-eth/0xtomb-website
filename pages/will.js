@@ -27,7 +27,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 const willContractConfig = {
-  address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+  address: '0x844729bDC48D20fF1C54e93D3EDAe2772a5E3138',
   abi: WILL_ABI,
 };
 const defaultAll = {
