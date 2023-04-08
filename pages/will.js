@@ -30,12 +30,50 @@ const willContractConfig = {
   address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
   abi: WILL_ABI,
 };
-
+const defaultAll = {
+  death: false,
+  threshold: 0,
+  willStatus: false,
+  validators: [
+    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+    '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+  ],
+  allocations: [
+    {
+      token: 'ABC',
+      allocation: [
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '30',
+        },
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '70',
+        },
+      ],
+    },
+    {
+      token: 'DEF',
+      allocation: [
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '80',
+        },
+        {
+          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          percentages: '20',
+        },
+      ],
+    },
+  ],
+};
 function Will() {
   const [active, setActive] = useState(2);
+  const [all, setAll] = useState(defaultAll);
   const [death, setDeath] = useState(false);
+  const [threshold, setThreshold] = useState(0);
   const [executed, setExecuted] = useState(false);
-  const [willer, setWiller] = useState(null);
+  const [willStatus, setWillStatus] = useState(false);
   const [validators, setValidators] = useState([
     '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
     '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
@@ -68,6 +106,8 @@ function Will() {
       ],
     },
   ]);
+  const [willer, setWiller] = useState(null);
+
   //read data from contract
   const willContractConfig = {
     address: '0x54b7d7fbe8f3223a44D0bBa8412324377a4C01E1',
@@ -77,21 +117,27 @@ function Will() {
   const result = useContractReads({
     contracts: [
       { ...willContractConfig, functionName: 'checkDeath' },
-      { ...willContractConfig, functionName: 'getAllocationAssets' },
-      { ...willContractConfig, functionName: 'getValidators' },
       { ...willContractConfig, functionName: 'getVotingThreshold' },
       { ...willContractConfig, functionName: 'getWillStatus' },
       { ...willContractConfig, functionName: 'getValidators' },
+      { ...willContractConfig, functionName: 'getAllocationAssets' },
     ],
   });
   console.log({ result });
-  // const { config: ackDeathConfig, error } = usePrepareContractWrite({
-  //   address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
-  //   abi: WILL_ABI,
-  //   functionName: 'ackDeath',
-  //   args: [willer, true],
+  // useEffect(() => {
+  //   all.death = result.data[0];
+  //   all.threshold = result.data[1];
+  //   all.willStatus = result.data[2];
+  //   all.validators = result.data[3];
+  //   // all.allocations=result.data[4]
   // });
-  // const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
+  const { config: ackDeathConfig, error } = usePrepareContractWrite({
+    address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+    abi: WILL_ABI,
+    functionName: 'ackDeath',
+    args: [willer, true],
+  });
+  const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
 
   return (
     <>
