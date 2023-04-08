@@ -22,14 +22,12 @@ import {
   useContractReads,
 } from 'wagmi';
 import WILL_ABI from '../abi/willAbi.json';
+import useAA from '../components/useAA';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-const willContractConfig = {
-  address: '0x844729bDC48D20fF1C54e93D3EDAe2772a5E3138',
-  abi: WILL_ABI,
-};
+
 const defaultAll = {
   death: false,
   threshold: 0,
@@ -68,7 +66,8 @@ const defaultAll = {
   ],
 };
 function Will() {
-  const [active, setActive] = useState(2);
+  const [active, setActive] = useState(1);
+  const { aa } = useAA();
   const [all, setAll] = useState(defaultAll);
   const [death, setDeath] = useState(false);
   const [threshold, setThreshold] = useState(0);
@@ -78,16 +77,18 @@ function Will() {
     '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
     '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
   ]);
+  const [willer, setWiller] = useState(aa);
+
   const [allocations, setAllocations] = useState([
     {
       token: 'ABC',
       allocation: [
         {
-          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          beneficiaries: '0xacf9dD5172cE19BFD910b8E8252a2E7b47C977df',
           percentages: '30',
         },
         {
-          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          beneficiaries: '0x863A0C95bF5dFc2b8404a81878dC5d533dbb523C',
           percentages: '70',
         },
       ],
@@ -96,25 +97,24 @@ function Will() {
       token: 'DEF',
       allocation: [
         {
-          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          beneficiaries: '0xacf9dD5172cE19BFD910b8E8252a2E7b47C977df',
           percentages: '80',
         },
         {
-          beneficiaries: '0x453AA106A34e8F72fAA687326071bAC1E5D34af5',
+          beneficiaries: '0x863A0C95bF5dFc2b8404a81878dC5d533dbb523C',
           percentages: '20',
         },
       ],
     },
   ]);
-  const [willer, setWiller] = useState(null);
 
   //read data from contract
   const willContractConfig = {
-    address: '0x54b7d7fbe8f3223a44D0bBa8412324377a4C01E1',
+    address: willer,
     abi: WILL_ABI,
   };
 
-  const result = useContractReads({
+  const { data, isLoading } = useContractReads({
     contracts: [
       { ...willContractConfig, functionName: 'checkDeath' },
       { ...willContractConfig, functionName: 'getVotingThreshold' },
@@ -123,7 +123,8 @@ function Will() {
       { ...willContractConfig, functionName: 'getAllocationAssets' },
     ],
   });
-  console.log({ result });
+  console.log(data);
+
   // useEffect(() => {
   //   all.death = result.data[0];
   //   all.threshold = result.data[1];
@@ -131,13 +132,13 @@ function Will() {
   //   all.validators = result.data[3];
   //   // all.allocations=result.data[4]
   // });
-  const { config: ackDeathConfig, error } = usePrepareContractWrite({
-    address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
-    abi: WILL_ABI,
-    functionName: 'ackDeath',
-    args: [willer, true],
-  });
-  const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
+  // const { config: ackDeathConfig, error } = usePrepareContractWrite({
+  //   address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+  //   abi: WILL_ABI,
+  //   functionName: 'ackDeath',
+  //   args: [willer, true],
+  // });
+  // const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
 
   return (
     <>
@@ -183,8 +184,6 @@ function Will() {
                   label="Willer Addres"
                   size="small"
                   fullWidth
-                  // error={errors?.name?.message}
-                  // helperText={errors?.name?.message}
                   onChange={(e) => {
                     setWiller(e.target.value);
                   }}

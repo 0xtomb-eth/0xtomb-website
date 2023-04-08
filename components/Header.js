@@ -1,62 +1,16 @@
 import '@rainbow-me/rainbowkit/styles.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Typography, Link, Menu, Tooltip, Button } from '@mui/material';
-
-import MenuIcon from '@mui/icons-material/Menu';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import { handleConnect } from '../pages/aaUtils/handleConnect';
-import { fetchBalance } from '@wagmi/core';
-import WILL_ABI from '../abi/willAbi.json';
+import { Box, Typography, Tooltip, Button } from '@mui/material';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import useAA from './useAA';
 
 const Header = () => {
-  const [openMenu, setOpenMenu] = useState(false);
-  const [governance, setGovernance] = useState(null);
-  const [aa, setAa] = useState('');
-  const [balance, setBalance] = useState(0);
+  const { aa, balance } = useAA();
+
   const [copied, setCopied] = useState(false);
   const router = useRouter();
-
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return;
-    }
-
-    setOpenMenu(open);
-  };
-
-  const handleGovernanceMenuClick = (event) => {
-    setGovernance(event.currentTarget);
-  };
-
-  const handleGovernanceMenuClose = () => {
-    setGovernance(null);
-  };
-
-  useEffect(() => {
-    (async () => {
-      console.log('loading aa');
-      const adr = await handleConnect();
-      console.log('loading finish', { adr });
-      setAa(adr);
-      const balance = await fetchBalance({
-        address: adr,
-        formatUnits: 'ether',
-      });
-      console.log(balance);
-      setBalance(parseFloat(balance.formatted).toFixed(2));
-    })();
-  }, []);
 
   return (
     <>

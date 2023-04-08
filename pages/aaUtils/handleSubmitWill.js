@@ -18,6 +18,7 @@ AA: 0x19CB25D9010597837078933b5546571dED91aE1f
 */
 
 export async function handleSubmitWill(willData) {
+  // debugger;
   console.log(willData);
   console.log(config);
   //   debugger;

@@ -28,24 +28,17 @@ export default function MintTomb() {
   const handleMint = async () => {
     try {
       setMintLoading(true);
-      const response = await fetch('/api/upload/png', {
-        method: 'POST',
-        body: modifiedImgSrc,
-      });
-      const body = await response.json();
-      const { cid } = body;
+
       const data = btoa(
         JSON.stringify({
           name: 'mflayer2-badge',
           description: 'mflayer2-badge',
-          image: `ipfs://${cid}`,
         })
       );
-      console.log(cid);
-      // const res = await writeAsync?.({
-      //   recklesslySetUnpreparedArgs: ['data:application/json;base64,' + data],
-      // });
-      // console.log(res);
+      const res = await writeAsync?.({
+        recklesslySetUnpreparedArgs: ['data:application/json;base64,' + data],
+      });
+      console.log(res);
       setMintLoading(false);
     } catch (err) {
       console.log(err);
@@ -132,16 +125,10 @@ export default function MintTomb() {
       // 在 canvas 上执行绘制操作
       ctx.fillStyle = '#E9E9E9';
       ctx.font = '40px Open Sans';
-      ctx.fillText(`章鱼哥的梦想`, 480, 320);
-      ctx.fillText(`2000.01.03-2010.03.03`, 420, 400);
+      ctx.fillText(`孙世林`, 550, 320);
+      ctx.fillText(`1988.01.21-2013.12.14`, 420, 400);
       // ctx.fillText(`Death in ${new Date().getTime()}`, 392, 460);
-      ctx.wrapText(
-        '在这里安息的是章鱼哥，他用他闪闪发光的精神和勇气，追求了他心中最大的梦想。',
-        392,
-        520,
-        440,
-        50
-      );
+      ctx.wrapText('人生的路途上充满了挫折和坎坷。', 392, 520, 440, 50);
 
       ctx.fillStyle = '#6C6C6C';
       ctx.font = '40px Open Sans';

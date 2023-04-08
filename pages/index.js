@@ -85,6 +85,7 @@ function HomePage() {
         message: JSON.stringify(res),
       });
     } catch (error) {
+      console.log(error);
       showMessage({
         type: 'error',
         title: 'something wrong happened',
@@ -141,7 +142,7 @@ function HomePage() {
                 fontWeight={200}
                 fontStyle={'italic'}
               >
-                Sign Your Will Sign Your Will Sign
+                I've designated a beneficiary for my life insurance policy.
               </Typography>
               <Controller
                 name="name"
@@ -212,7 +213,8 @@ function HomePage() {
                 fontWeight={200}
                 fontStyle={'italic'}
               >
-                Sign Your Will Sign Your Will Sign
+                I've created a trust to protect my assets for my loved ones
+                after my passing.
               </Typography>
               <Controller
                 name="threshold"
@@ -328,7 +330,7 @@ function HomePage() {
                 fontWeight={200}
                 fontStyle={'italic'}
               >
-                Sign Your Will Sign Your Will Sign
+                I've written a living will to outline my end-of-life wishes.
               </Typography>
               {fields.map(({ id }, index) => (
                 <Controller
@@ -443,16 +445,16 @@ function HomePage() {
                 fontWeight={200}
                 fontStyle={'italic'}
               >
-                Sign Your Will Sign Your Will Sign
+                I've appointed an executor to handle my estate after I'm gone.
               </Typography>
-              {[{ name: 'ETH' }, { name: 'USDT' }].map((value, index) => {
+              {[{ name: 'USDT' }].map((value, index) => {
                 return (
                   <Grid key={index} container spacing={1}>
-                    <Grid xs={3}>
+                    <Grid xs={2}>
                       <Typography>{value.name}</Typography>
                     </Grid>
-                    <Grid xs={3}>
-                      <Typography>{value.amount}</Typography>
+                    <Grid xs={2}>
+                      <Typography>100</Typography>
                     </Grid>
                     <Grid xs={6} container>
                       {beneficiaries.map((value, index2) => {

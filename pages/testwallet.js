@@ -47,7 +47,6 @@ const Transfer = () => {
   const [aa_addr, setaa_addr] = useState('undefined');
   const [paddr, setPaddr] = useState('undefined');
 
-
   const handleChange = (e) => {
     console.log(e.target.value);
     setTarget(e.target.value);
@@ -64,7 +63,7 @@ const Transfer = () => {
     setSigner(
       await (async () => {
         const signer = await getMetaMaskSigner();
-        debugger;
+        // debugger;
         if (signer) {
           console.log('Connected to MetaMask');
         } else {
