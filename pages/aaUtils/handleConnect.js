@@ -1,7 +1,9 @@
 import { getWebSimpleAccount } from './aaUtils/getWebSimpleAccount';
 import config from './config'
 
-const handleConnect = async () => {
+export const handleConnect = async () => {
+    debugger
+    console.log(config);
   // debugger;
   const accountAPI = await getWebSimpleAccount(
     config.rpcUrl,

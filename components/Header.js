@@ -9,7 +9,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import { handleConnect } from '../pages/testpage';
+import { handleConnect } from '../pages/aaUtils/handleConnect';
 import { fetchBalance } from '@wagmi/core';
 import WILL_ABI from '../abi/willAbi.json';
 
