@@ -9,7 +9,7 @@ import {
 } from '../../src';
 import { getWebSimpleAccount } from './getWebSimpleAccount';
 import will_abi from './WillAccount.json';
-import config from './config'
+import { config } from './config';
 /* * 
 test ERC20: 0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e
 test ERC20: 0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1
@@ -18,6 +18,7 @@ AA: 0x19CB25D9010597837078933b5546571dED91aE1f
 
 export async function handleSubmitWill(willData) {
   console.log(willData);
+  console.log(config);
   //   debugger;
   const accountAPI = await getWebSimpleAccount(
     config.rpcUrl,
