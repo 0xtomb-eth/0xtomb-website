@@ -19,6 +19,7 @@ import {
   useContractInfiniteReads,
   useContractWrite,
   usePrepareContractWrite,
+  useContractReads,
 } from 'wagmi';
 import WILL_ABI from '../abi/willAbi.json';
 
@@ -68,14 +69,29 @@ function Will() {
     },
   ]);
   //read data from contract
-
-  const { config: ackDeathConfig, error } = usePrepareContractWrite({
-    address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+  const willContractConfig = {
+    address: '0x54b7d7fbe8f3223a44D0bBa8412324377a4C01E1',
     abi: WILL_ABI,
-    functionName: 'ackDeath',
-    args: [willer, true],
+  };
+
+  const result = useContractReads({
+    contracts: [
+      { ...willContractConfig, functionName: 'checkDeath' },
+      { ...willContractConfig, functionName: 'getAllocationAssets' },
+      { ...willContractConfig, functionName: 'getValidators' },
+      { ...willContractConfig, functionName: 'getVotingThreshold' },
+      { ...willContractConfig, functionName: 'getWillStatus' },
+      { ...willContractConfig, functionName: 'getValidators' },
+    ],
   });
-  const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
+  console.log({ result });
+  // const { config: ackDeathConfig, error } = usePrepareContractWrite({
+  //   address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
+  //   abi: WILL_ABI,
+  //   functionName: 'ackDeath',
+  //   args: [willer, true],
+  // });
+  // const { writeAsync: ackDeathWriteAsync } = useContractWrite(ackDeathConfig);
 
   return (
     <>
