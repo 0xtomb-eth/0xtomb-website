@@ -15,6 +15,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useContractRead, useContractReads } from 'wagmi';
 import WILL_ABI from '../abi/willAbi.json';
+import NFT_ABI from '../abi/nftAbi.json';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -23,25 +24,29 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function Cemetery() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(0);
+  const nftConfig = {
+    address: '0x43c4Ebf956F7804596c333B209Ff246a476594DA',
+    abi: NFT_ABI,
+    chainId: 420,
+  };
 
   const { data: totalDate } = useContractRead({
-    address: '0xecb504d39723b0be0e3a9aa33d646642d1051ee1',
-    abi: WILL_ABI,
-    functionName: 'totalTokens',
+    ...nftConfig,
+    functionName: 'totalSupply',
   });
-  const nftConfig = {
-    address: '0x1dfe7ca09e99d10835bf73044a23b73fc20623df',
-    abi: WILL_ABI,
-    functionName: 'gettoken',
-  };
-  const { data: nftList } = useContractReads({
-    contracts: Array.from({ from: totalDate }, (_, i) => i).map((val) => {
-      return {
-        ...nftConfig,
-        args: [val],
-      };
-    }),
+
+  const { data: nftList, error } = useContractReads({
+    contracts: Array.from({ length: parseInt(totalDate, 16) }, (_, x) => x).map(
+      (val) => {
+        return {
+          ...nftConfig,
+          functionName: 'tokenURI',
+          args: [val + ''],
+        };
+      }
+    ),
   });
+  console.log(totalDate, nftList, error);
 
   const handleClickOpen = () => {
     setOpen(true);

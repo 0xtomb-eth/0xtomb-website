@@ -1,7 +1,14 @@
 import Head from 'next/head';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, goerli, WagmiConfig } from 'wagmi';
-import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
+import {
+  mainnet,
+  polygon,
+  optimism,
+  optimismGoerli,
+  arbitrum,
+  polygonMumbai,
+} from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -11,7 +18,7 @@ import '../styles/globals.css';
 
 const { chains, provider } = configureChains(
   // [mainnet, polygon, optimism, arbitrum],
-  [polygon],
+  [polygon, polygonMumbai, optimismGoerli, goerli],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
 );
 
