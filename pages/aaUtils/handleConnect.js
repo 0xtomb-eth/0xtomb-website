@@ -1,5 +1,5 @@
-import { getWebSimpleAccount } from './aaUtils/getWebSimpleAccount';
-import config from './config'
+import { getWebSimpleAccount } from './getWebSimpleAccount';
+import {config} from './config'
 
 export const handleConnect = async () => {
     debugger
