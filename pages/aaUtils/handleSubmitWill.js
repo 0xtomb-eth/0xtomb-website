@@ -102,5 +102,5 @@ export async function handleSubmitWill(willData) {
   });
   //   const txHash = await accountAPI.getUserOpReceipt(uoHash);
   console.log(`Transaction hash: ${tx}`);
-  return tx ? tx[0] : null;
+  return tx;
 }

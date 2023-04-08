@@ -8,10 +8,7 @@ import {
   getHttpRpcClient,
   ERC20_ABI,
 } from '../src';
-import {
-  getWebSimpleAccount
-} from "./aaUtils/getWebSimpleAccount"
-
+import { getWebSimpleAccount } from './aaUtils/getWebSimpleAccount';
 
 const config = {
   bundlerUrl:
@@ -19,7 +16,7 @@ const config = {
   rpcUrl:
     'https://node.stackup.sh/v1/rpc/ab34b239039b78a490192eebb2898648b599e2c85b758b435ddcc336b8afa9fc',
   entryPoint: '0x0576a174D229E3cFA37253523E645A78A0C91B57',
-  simpleAccountFactory: '0xE83b6eC83486ea3e9687CF9191C459d10eC0Fc23',
+  simpleAccountFactory: '0x8057494e3A88f5083814DFdba6af7c54d14ca19e',
 };
 
 /* * 
@@ -43,7 +40,7 @@ async function batchTransferERC20(
 
   let dest = [];
   let data = [];
-  debugger
+  // debugger
   const sender = await accountAPI.getCounterFactualAddress();
   let p = transfer20Info.map(async ({ tkn, t, amt }) => {
     const token = ethers.utils.getAddress(tkn);
@@ -93,6 +90,35 @@ async function batchTransferERC20(
   console.log(`Transaction hash: ${txHash}`);
   return msg;
 }
+const handleConnect = async () => {
+  // debugger;
+  const accountAPI = await getWebSimpleAccount(
+    config.rpcUrl,
+    config.entryPoint,
+    config.simpleAccountFactory
+  );
+  const address = await accountAPI.getCounterFactualAddress();
+  //   console.log(`SimpleAccount address: ${address}`);
+  console.log(address);
+  return address;
+};
+
+const handleBatchTransact = async () => {
+  // debugger;
+  const msg = await batchTransferERC20([
+    {
+      tkn: '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
+      t: '0xBD62B143954Fb954012685699df95681D5501540',
+      amt: '0.001',
+    },
+    {
+      tkn: '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1',
+      t: '0xBD62B143954Fb954012685699df95681D5501540',
+      amt: '0.001',
+    },
+  ]);
+  console.log(msg);
+};
 
 /**
  * react components
@@ -100,35 +126,6 @@ async function batchTransferERC20(
  * @returns
  */
 const testpage = () => {
-  const handleConnect = async () => {
-    debugger;
-    const accountAPI = await getWebSimpleAccount(
-      config.rpcUrl,
-      config.entryPoint,
-      config.simpleAccountFactory
-    );
-    const address = await accountAPI.getCounterFactualAddress();
-    //   console.log(`SimpleAccount address: ${address}`);
-    console.log(address);
-  };
-
-  const handleBatchTransact = async () => {
-    // debugger;
-    const msg = await batchTransferERC20([
-      {
-        tkn: '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
-        t: '0xBD62B143954Fb954012685699df95681D5501540',
-        amt: '0.001',
-      },
-      {
-        tkn: '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1',
-        t: '0xBD62B143954Fb954012685699df95681D5501540',
-        amt: '0.001',
-      },
-    ]);
-    console.log(msg);
-  };
-
   return (
     <div>
       <button onClick={handleConnect}>Connect</button>
@@ -138,5 +135,4 @@ const testpage = () => {
 };
 
 export default testpage;
-
-
+export { handleConnect };

@@ -1,7 +1,7 @@
 import '@rainbow-me/rainbowkit/styles.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Typography, Link, Menu, MenuItem } from '@mui/material';
+import { Box, Typography, Link, Menu, Tooltip, Button } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -9,12 +9,18 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import { handleConnect } from '../pages/testpage';
+import { fetchBalance } from '@wagmi/core';
+import WILL_ABI from '../abi/willAbi.json';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [governance, setGovernance] = useState(null);
+  const [aa, setAa] = useState('');
+  const [balance, setBalance] = useState(0);
+  const [copied, setCopied] = useState(false);
   const router = useRouter();
 
   const toggleDrawer = (open) => (event) => {
@@ -36,6 +42,21 @@ const Header = () => {
   const handleGovernanceMenuClose = () => {
     setGovernance(null);
   };
+
+  useEffect(() => {
+    (async () => {
+      console.log('loading aa');
+      const adr = await handleConnect();
+      console.log('loading finish', { adr });
+      setAa(adr);
+      const balance = await fetchBalance({
+        address: adr,
+        formatUnits: 'ether',
+      });
+      console.log(balance);
+      setBalance(parseFloat(balance.formatted).toFixed(2));
+    })();
+  }, []);
 
   return (
     <>
@@ -89,7 +110,37 @@ const Header = () => {
           </Box>
         </Box>
         <Box display="flex">
-          <ConnectButton />
+          <Tooltip
+            title={copied ? 'copied!' : 'click to copy: ' + aa}
+            onClick={() => {
+              navigator.clipboard.writeText(aa).then(
+                function () {
+                  setCopied(true);
+                  setTimeout(() => {
+                    setCopied(false);
+                  }, 500);
+                },
+                function (e) {
+                  console.error(e);
+                }
+              );
+            }}
+          >
+            <Button variant="outlined" sx={{ fontSize: '8px', mr: '10px' }}>
+              AA: {aa.slice(0, 4) + '...' + aa.slice(-5, -1)}
+              <br />
+              {balance}
+            </Button>
+          </Tooltip>
+
+          <ConnectButton
+            showBalance={false}
+            chainStatus="none"
+            accountStatus={{
+              smallScreen: 'avatar',
+              largeScreen: 'full',
+            }}
+          />
         </Box>
       </Box>
     </>

@@ -24,8 +24,8 @@ import useSWR from 'swr';
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function HomePage() {
-  // request contract abi from api 
-const { will_abi, error } = useSWR('/api/staticdata', fetcher);
+  // request contract abi from api
+  // const { will_abi, error } = useSWR('/api/staticdata', fetcher);
 
   const [active, setActive] = useState(1);
   const [beneficiaries, setBeneficiaries] = useState([]);
@@ -75,35 +75,23 @@ const { will_abi, error } = useSWR('/api/staticdata', fetcher);
       '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
       '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1',
     ];
-    data.threshold = 3;
-    handleSubmitWill(data);
-    // try {
-    //   const res = await Promise.all(
-    //     data.amount.map(async (val) => {
-    //       return await writeAsync?.({
-    //         recklesslySetUnpreparedArgs: [
-    //           '0x7Bcf6f55E7136960A5602d6AB6bc163C7D7C4902',
-    //           data.beneficiary,
-    //           val,
-    //         ],
-    //       });
-    //     })
-    //   );
-    //   showMessage({
-    //     type: 'success',
-    //     title: 'Sign Will Success',
-    //     message: JSON.stringify(res),
-    //   });
-    //   setLoading(false);
-    // } catch (error) {
-    //   console.log(error);
-    //   showMessage({
-    //     type: 'error',
-    //     title: 'Fail to Tx',
-    //     body: JSON.stringify(error),
-    //   });
-    //   setLoading(false);
-    // }
+    console.log({ data });
+    data.threshold = parseInt(data.threshold);
+    try {
+      const res = await handleSubmitWill(data);
+      showMessage({
+        type: 'success',
+        title: 'Sign Will Success',
+        message: JSON.stringify(res),
+      });
+    } catch (error) {
+      showMessage({
+        type: 'error',
+        title: 'something wrong happened',
+        message: JSON.stringify(error),
+      });
+    }
+    setLoading(false);
   });
 
   useEffect(() => {
@@ -226,6 +214,22 @@ const { will_abi, error } = useSWR('/api/staticdata', fetcher);
               >
                 Sign Your Will Sign Your Will Sign
               </Typography>
+              <Controller
+                name="threshold"
+                control={control}
+                rules={{ required: 'Enter your threshold' }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    value={value}
+                    label="threshold"
+                    width={'400px'}
+                    size="small"
+                    error={errors?.epitaph?.message}
+                    helperText={errors?.epitaph?.message}
+                    onChange={onChange}
+                  />
+                )}
+              />
               {validatorField.map(({ id }, index) => (
                 <Controller
                   name={`validator.[${index}].validator`}
@@ -517,10 +521,11 @@ const { will_abi, error } = useSWR('/api/staticdata', fetcher);
                   <Button
                     size="small"
                     fullWidth
+                    disabled={loading}
                     variant="contained"
                     onClick={onSubmit}
                   >
-                    Submit
+                    {loading ? 'loading' : 'Submit'}
                   </Button>
                 </Grid>
               </Grid>

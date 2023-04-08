@@ -3,6 +3,6 @@
   "rpcUrl": "https://node.stackup.sh/v1/rpc/ab34b239039b78a490192eebb2898648b599e2c85b758b435ddcc336b8afa9fc",
   "signingKey": "0x4f762c7ca62994c30a1311537753c8f946e29a9a9c1d30e0dbbc49843697268c",
   "entryPoint": "0x0576a174D229E3cFA37253523E645A78A0C91B57",
-  "simpleAccountFactory": "0x71D63edCdA95C61D6235552b5Bc74E32d8e2527B",
+  "simpleAccountFactory": "0x8057494e3A88f5083814DFdba6af7c54d14ca19e",
   "paymasterUrl": ""
 }
