@@ -1,8 +1,8 @@
 export const config = {
   bundlerUrl:
-    'https://node.stackup.sh/v1/rpc/ab34b239039b78a490192eebb2898648b599e2c85b758b435ddcc336b8afa9fc',
+    'https://api.stackup.sh/v1/node/fa8b8a4bdb3db0efa4ca6f3bbc7b4bc5560da0fbbcf40fab405a705c76037436',
   rpcUrl:
-    'https://node.stackup.sh/v1/rpc/ab34b239039b78a490192eebb2898648b599e2c85b758b435ddcc336b8afa9fc',
-  entryPoint: '0x0576a174D229E3cFA37253523E645A78A0C91B57',
-  simpleAccountFactory: '0x9F1ABFc7E1643d599216e394f2b1300B48c159FD',
+    'https://api.stackup.sh/v1/node/fa8b8a4bdb3db0efa4ca6f3bbc7b4bc5560da0fbbcf40fab405a705c76037436',
+  entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
+  simpleAccountFactory: '0xa064F047038C17bB66D114faCbb80F68DdFB83f0',
 };

@@ -10,17 +10,18 @@ import {
 } from '../src';
 import { getWebSimpleAccount } from './aaUtils/getWebSimpleAccount';
 import WILL_CONTRACT from './aaUtils/willAbi.json';
+import { config } from './aaUtils/config';
 
 // https://node.stackup.sh/v1/rpc/62cf70c33d4cfac79cb844edf79d4afbb5056d7d6901d47669e29e344e10190a
-const config = {
-  bundlerUrl:
-    'https://node.stackup.sh/v1/rpc/62cf70c33d4cfac79cb844edf79d4afbb5056d7d6901d47669e29e344e10190a',
-  rpcUrl:
-    'https://node.stackup.sh/v1/rpc/62cf70c33d4cfac79cb844edf79d4afbb5056d7d6901d47669e29e344e10190a',
-  entryPoint: '0x0576a174D229E3cFA37253523E645A78A0C91B57',
-  simpleAccountFactory: '0x71D63edCdA95C61D6235552b5Bc74E32d8e2527B',
-  // simpleAccountFactory: '0x7Bcf6f55E7136960A5602d6AB6bc163C7D7C4902',
-};
+// const config = {
+//   bundlerUrl:
+//     'https://node.stackup.sh/v1/rpc/62cf70c33d4cfac79cb844edf79d4afbb5056d7d6901d47669e29e344e10190a',
+//   rpcUrl:
+//     'https://node.stackup.sh/v1/rpc/62cf70c33d4cfac79cb844edf79d4afbb5056d7d6901d47669e29e344e10190a',
+//   entryPoint: '0x0576a174D229E3cFA37253523E645A78A0C91B57',
+//   simpleAccountFactory: '0x71D63edCdA95C61D6235552b5Bc74E32d8e2527B',
+//   // simpleAccountFactory: '0x7Bcf6f55E7136960A5602d6AB6bc163C7D7C4902',
+// };
 
 /* * 
 test ERC20: 0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e
