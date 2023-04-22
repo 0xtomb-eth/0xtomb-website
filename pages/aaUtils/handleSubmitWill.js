@@ -42,12 +42,12 @@ export async function handleSubmitWill(willData) {
         data.beneficiary.map((b) => {
           return ethers.utils.getAddress(b);
         }),
-        data.amount[i],
+        data.percentages[i],
       ]);
     }
+
     return result;
   })(willData);
-  console.log(will_abi);
   const gasFee = await getGasFee(provider);
   const willbase = new ethers.Contract(willAddress, will_abi.abi, provider);
 
@@ -56,6 +56,7 @@ export async function handleSubmitWill(willData) {
       target: willAddress,
       data: willbase.interface.encodeFunctionData('setAllocation', data),
       ...gasFee,
+      gasLimit: 500000
     });
   });
   // debugger

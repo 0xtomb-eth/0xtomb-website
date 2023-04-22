@@ -56,12 +56,12 @@ async function getMetaMaskSigner() {
 export async function getWebSimpleAccount(rpcUrl, entryPointAddress, factoryAddress) {
   const owner = await getMetaMaskSigner();
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+
   const sw = new SimpleAccountAPI({
     provider,
     entryPointAddress,
     owner,
-    factoryAddress,
-    undefined,
+    factoryAddress
   });
 
   // Hack: default getUserOpReceipt does not include fromBlock which causes an error for some RPC providers.

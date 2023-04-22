@@ -10,7 +10,12 @@ export const handleConnect = async () => {
     config.entryPoint,
     config.simpleAccountFactory
   );
+  console.log(`entryPoint address: ${config.entryPoint}`);
+  console.log(`rpcUrl: ${config.rpcUrl}`);
+  console.log(`simpleAccountFactory: ${config.simpleAccountFactory}`);
+
   const address = await accountAPI.getCounterFactualAddress();
-  //   console.log(`SimpleAccount address: ${address}`);
+  console.log(`aa address: ${address}`);
+
   return address;
 };
