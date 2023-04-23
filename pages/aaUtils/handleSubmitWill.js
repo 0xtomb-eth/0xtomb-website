@@ -46,20 +46,23 @@ export async function handleSubmitWill(willData) {
   })(willData);
 
   // set allocation
+  const gasLimit = await willContract.setAllocation.estimateGas(setAllocData[0][0], setAllocData[0][1], setAllocData[0][2]);
   console.log("this is setAllocData: ", setAllocData);
   console.log(setAllocData[0][0], setAllocData[0][1], setAllocData[0][2]);
   console.log(setAllocData[1][0], setAllocData[1][1], setAllocData[1][2]);
-  const tx1 = await willContract.setAllocation(setAllocData[0][0], setAllocData[0][1], setAllocData[0][2], { gasLimit: 900000 });
+  const tx1 = await willContract.setAllocation(setAllocData[0][0], setAllocData[0][1], setAllocData[0][2], { gasLimit: gasLimit });
   console.log("Transaction hash for tx1: ", tx1.hash);
   console.log("Successfully Set Allocation1");
 
-  const tx2 = await willContract.setAllocation(setAllocData[1][0], setAllocData[1][1], setAllocData[1][2], { gasLimit: 900000 });
+  const gasLimit2 = await willContract.setAllocation.estimateGas(setAllocData[0][0], setAllocData[0][1], setAllocData[0][2]);
+  const tx2 = await willContract.setAllocation(setAllocData[1][0], setAllocData[1][1], setAllocData[1][2], { gasLimit: gasLimit2 });
   console.log("Transaction hash for tx2: ", tx2.hash);
   await tx2.wait();
   console.log("Successfully Set Allocation2");
 
   // set death validators
-  const tx3 = await willContract.setDeathValidators(willData.validator, willData.threshold, { gasLimit: 900000 });
+  const gasLimit3 = await willContract.setAllocation.estimateGas(setAllocData[0][0], setAllocData[0][1], setAllocData[0][2]);
+  const tx3 = await willContract.setDeathValidators(willData.validator, willData.threshold, { gasLimit: gasLimit3 });
   console.log("Transaction hash for tx3: ", tx3.hash);
   await tx2.wait();
   console.log("Successfully Set Validators");
