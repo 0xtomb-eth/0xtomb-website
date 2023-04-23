@@ -66,8 +66,8 @@ function HomePage() {
     data.validator = data.validator.map((val) => {
       return val.validator;
     });
-    data.amount = data.amount?.map((i) => {
-      return i.map((j) => j.amount);
+    data.amount = data.amount?.map((val) => {
+      return val.amount;
     });
     // test ERC20: 0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e
     // test ERC20: 0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1
@@ -75,6 +75,7 @@ function HomePage() {
       '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
       '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1',
     ];
+    data.percentages = [[100], [100]]
     console.log({ data });
     data.threshold = parseInt(data.threshold);
     try {

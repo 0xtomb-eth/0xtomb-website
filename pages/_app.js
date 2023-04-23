@@ -8,6 +8,7 @@ import {
   optimismGoerli,
   arbitrum,
   polygonMumbai,
+  localhost,
 } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
@@ -18,8 +19,10 @@ import '../styles/globals.css';
 
 const { chains, provider } = configureChains(
   // [mainnet, polygon, optimism, arbitrum],
-  [polygon, polygonMumbai, optimismGoerli, goerli],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+  [localhost],
+  [publicProvider()]
+  // [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+
 );
 
 const { connectors } = getDefaultWallets({

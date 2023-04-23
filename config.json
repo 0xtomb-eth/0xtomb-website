@@ -1,8 +1,8 @@
 {
-  "bundlerUrl": "https://api.stackup.sh/v1/node/fa8b8a4bdb3db0efa4ca6f3bbc7b4bc5560da0fbbcf40fab405a705c76037436",
-  "rpcUrl": "https://api.stackup.sh/v1/node/fa8b8a4bdb3db0efa4ca6f3bbc7b4bc5560da0fbbcf40fab405a705c76037436",
-  "signingKey": "0x4f762c7ca62994c30a1311537753c8f946e29a9a9c1d30e0dbbc49843697268c",
-  "entryPoint": "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-  "simpleAccountFactory": "0xa064F047038C17bB66D114faCbb80F68DdFB83f0",
+  "bundlerUrl": "http://localhost:3000/rpc",
+  "rpcUrl": "http://localhost:8545",
+  "signingKey": "0x7777777777777777777777777777777777777777777777777777777777777777",
+  "entryPoint": "0x0576a174d229e3cfa37253523e645a78a0c91b57",
+  "simpleAccountFactory": "0xe1a044183427dD01E32ECa8f458872a0F4B72f97",
   "paymasterUrl": ""
 }
