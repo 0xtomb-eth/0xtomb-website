@@ -14,19 +14,12 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import WILL_ABI from '../abi/willAbi.json';
 
 import Layout from '../layout/Layout';
 import showMessage from '../components/showMessage';
 import { handleSubmitWill } from './aaUtils/handleSubmitWill';
-import useSWR from 'swr';
-//Write a fetcher function to wrap the native fetch function and return the result of a call to url in json format
-const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function HomePage() {
-  // request contract abi from api
-  // const { will_abi, error } = useSWR('/api/staticdata', fetcher);
-
   const [active, setActive] = useState(1);
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -51,13 +44,6 @@ function HomePage() {
     name: 'validator', // unique name for your Field Array
   });
 
-  // const { data, writeAsync } = useContractWrite({
-  //   address: '0x630852804e7da852564d5E7437E570d77Ef9Faf6',
-  //   abi: WILL_ABI,
-  //   functionName: 'setAllocation',
-  //   mode: 'recklesslyUnprepared',
-  // });
-
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
     data.beneficiary = data.beneficiary.map((val) => {
@@ -66,19 +52,19 @@ function HomePage() {
     data.validator = data.validator.map((val) => {
       return val.validator;
     });
-    data.amount = data.amount?.map((val) => {
-      return val.amount;
+    data.amount = data.amount?.map((arr) => {
+      return arr.map((val) => {
+        return val.amount;
+      });
     });
-    // test ERC20: 0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e
-    // test ERC20: 0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1
     data.assets = [
       '0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e',
       '0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1',
     ];
-    data.percentages = [[100], [100]]
-    console.log({ data });
+    // data.percentages = [[100], [100]];
     data.threshold = parseInt(data.threshold);
     try {
+      console.log('submit data: ', { data });
       const res = await handleSubmitWill(data);
       showMessage({
         type: 'success',
@@ -448,7 +434,7 @@ function HomePage() {
               >
                 I've appointed an executor to handle my estate after I'm gone.
               </Typography>
-              {[{ name: 'USDT' }].map((value, index) => {
+              {[{ name: 'USDT' }, { name: 'USDC' }].map((value, index) => {
                 return (
                   <Grid key={index} container spacing={1}>
                     <Grid xs={2}>
@@ -470,7 +456,7 @@ function HomePage() {
                             </Grid>
                             <Grid xs={6}>
                               <Controller
-                                name={`amount.${index}.${index2}.amount`}
+                                name={`amount[${index}][${index2}].amount`}
                                 control={control}
                                 rules={{
                                   required: '请输入分配比例',
