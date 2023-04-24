@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Web3Auth } from "@web3auth/modal";
-
-
+import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
+import { MetamaskAdapter } from "@web3auth/metamask-adapter";
 
 // import { TorusWalletAdapter } from "@web3auth/torus-evm-adapter";
 // import RPC from ".api/ethersRPC"; // for using ethers.js
@@ -13,6 +13,17 @@ const clientId = "BKP4fsLio7EVgA2GH0iQGUWfZCQaroScJWDQhRxMK3beDhU7beudVK3-F_opZ3
 
 export default function useWeb3Auth() {
     const [web3auth, setWeb3auth] = useState(null);
+    const [provider, setProvider] = useState(null);
+
+                
+    function uiConsole() {
+        const args = Array.prototype.slice.call(arguments);
+        const el = document.querySelector("#console > p");
+        if (el) {
+          el.innerHTML = JSON.stringify(args || {}, null, 2);
+        }
+      }
+
     // const [torusPlugin, setTorusPlugin] = useState(null);
 
     useEffect(() => {
@@ -27,6 +38,7 @@ export default function useWeb3Auth() {
               },
               web3AuthNetwork: "cyan",
             });
+
     
             // plugins and adapters are optional and can be added as per your requirement
             // read more about plugins here: https://web3auth.io/docs/sdk/web/plugins/
@@ -329,11 +341,9 @@ export default function useWeb3Auth() {
 
       return (
         <div className="container">
-        <h1 className="title">
-          <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
-          </a>
+        <div className="title">
           Connect with Web3Auth
-        </h1>
+        </div>
   
         <div className="grid">{provider ? loggedInView : unloggedInView}</div>
   
