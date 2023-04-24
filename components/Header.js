@@ -5,12 +5,21 @@ import { Box, Typography, Tooltip, Button } from '@mui/material';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import useAA from './useAA';
+import useWeb3Auth from './useWeb3auth';
 
 const Header = () => {
   const { aa, balance } = useAA();
 
   const [copied, setCopied] = useState(false);
   const router = useRouter();
+
+  const handleConnectWithWeb3Auth = async () => {
+    try {
+      await web3auth.connect();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -95,6 +104,17 @@ const Header = () => {
               largeScreen: 'full',
             }}
           />
+        </Box>
+        <Box display="flex">
+          <header>
+            <nav>
+              <ul>
+                <li>
+                  <button onClick={handleConnectWithWeb3Auth}>Login With Web3Auth</button>
+                </li>
+              </ul>
+            </nav>
+          </header>
         </Box>
       </Box>
     </>
