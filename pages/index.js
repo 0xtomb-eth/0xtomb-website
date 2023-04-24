@@ -22,6 +22,8 @@ import { handleSubmitWill } from './aaUtils/handleSubmitWill';
 import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
 import { MetamaskAdapter } from "@web3auth/metamask-adapter";
 import { Web3Auth } from "@web3auth/modal";
+import { useTheme } from '@mui/material/styles';
+
 // import { TorusWalletAdapter } from "@web3auth/torus-evm-adapter";
 // import RPC from ".api/ethersRPC"; // for using ethers.js
 // Plugins
@@ -31,11 +33,11 @@ import { WalletConnectV1Adapter } from "@web3auth/wallet-connect-v1-adapter";
 const clientId = "BEglQSgt4cUWcj6SKRdu5QkOXTsePmMcusG5EAoyjyOYKlVRjIF1iCNnMOTfpzCiunHRrMui8TIwQPXdkQ8Yxuk"
 
 function HomePage() {
+  const theme = useTheme();
   const [web3auth, setWeb3auth] = useState(null);
   // const [torusPlugin, setTorusPlugin] = useState(null);
   const [provider, setProvider] = useState(null);
   
-
   const [active, setActive] = useState(1);
   const [beneficiaries, setBeneficiaries] = useState([]);
   
@@ -497,6 +499,7 @@ function HomePage() {
                 size="small"
                 fullWidth
                 variant="outlined"
+                color="primary"
                 onClick={() => {
                   setActive(active + 1);
                 }}
@@ -528,6 +531,7 @@ function HomePage() {
                 fontSize={'15px'}
                 fontWeight={200}
                 fontStyle={'italic'}
+                color="primary"
               >
                 I've created a trust to protect my assets for my loved ones
                 after my passing.
@@ -599,6 +603,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color='primary'
                     onClick={() => {
                       setActive(active - 1);
                     }}
@@ -611,6 +616,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color="primary"
                     disabled={!fields.length}
                     onClick={() => {
                       setActive(active + 1);
@@ -706,6 +712,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color='primary'
                     onClick={() => {
                       setActive(active - 1);
                     }}
@@ -718,6 +725,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color="primary"
                     disabled={!fields.length}
                     onClick={() => {
                       const b = getValues('beneficiary');
@@ -828,6 +836,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color='primary'
                     onClick={() => {
                       setActive(active - 1);
                     }}
@@ -877,7 +886,7 @@ function HomePage() {
               <Typography
                 key={index}
                 fontStyle={active == index + 1 ? '' : 'italic'}
-                color={active == index + 1 ? 'black' : '#a2a9b4'}
+                color={theme.palette.mode === 'dark' ? (active == index + 1 ? 'white' : '#a2a9b4') : (active == index + 1 ? 'black' : '#a2a9b4')}
                 textTransform={'capitalize'}
               >
                 {v}

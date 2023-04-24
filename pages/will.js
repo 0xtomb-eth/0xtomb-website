@@ -193,6 +193,7 @@ function Will() {
                   size="small"
                   fullWidth
                   variant="outlined"
+                  color='primary'
                   onClick={() => {
                     setActive(active + 1);
                   }}
@@ -300,6 +301,7 @@ function Will() {
                       fullWidth
                       size="small"
                       variant="outlined"
+                      color='primary'
                       onClick={() => {
                         setActive(active - 1);
                       }}
@@ -311,6 +313,7 @@ function Will() {
                       size="small"
                       fullWidth
                       variant="contained"
+                      color='primary'
                       onClick={() => {
                         console.log('AckDeath');
                       }}

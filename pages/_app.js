@@ -13,6 +13,7 @@ import {
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import '../styles/globals.css';
 
 // import Header from '@/components/Header';
@@ -37,11 +38,14 @@ const wagmiClient = createClient({
 });
 
 export default function App({ Component, pageProps }) {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  
   const theme = createTheme({
     typography: {
       fontFamily: ['"Helvetica Neue"'].join(','),
     },
     palette: {
+      mode: prefersDarkMode ? 'dark' : 'light',
       primary: {
         // Purple and green play nicely together.
         main: '#000000',
@@ -50,10 +54,18 @@ export default function App({ Component, pageProps }) {
         // This is green.A700 as hex.
         main: '#11cb5f',
       },
+      dark: {
+        primary: {
+          main: '#f5f5f5',
+        },
+        secondary: {
+          main: '#11cb5f',
+        },
+      },
     },
   });
   return (
-    <div style={{ background: '#f5f5f5' }}>
+    <div style={{ background: theme.palette.mode === 'dark' ? '#000000' : '#ffffff' }}>
       <Head>
         <title>0xtomb</title>
         <meta
