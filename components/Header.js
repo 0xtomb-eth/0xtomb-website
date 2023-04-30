@@ -5,12 +5,23 @@ import { Box, Typography, Tooltip, Button } from '@mui/material';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import useAA from './useAA';
+import useWeb3Auth from './useWeb3auth';
 
 const Header = () => {
+  const web3Auth = useWeb3Auth();
   const { aa, balance } = useAA();
+  const [provider, setProvider] = useState(null);
 
   const [copied, setCopied] = useState(false);
   const router = useRouter();
+
+  // const handleConnectWithWeb3Auth = async () => {
+  //   try {
+  //     await web3auth.connect();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <>
@@ -96,9 +107,17 @@ const Header = () => {
             }}
           />
         </Box>
+        <Box display="flex">
+          <div className="header">
+            {/* 渲染useWeb3Auth返回的div */}
+            {web3Auth}
+            {/* 其他header相关的内容 */}
+            ...
+          </div>
+        </Box>
       </Box>
     </>
   );
 };
-
+                                                                                
 export default Header;

@@ -6,7 +6,7 @@
 
 启动本地geth节点：
 ```shell
-ocker run --rm -ti --name geth -p 8545:8545 ethereum/client-go:v1.10.26 \
+docker run -d --rm -ti --name geth -p 8545:8545 ethereum/client-go:v1.10.26 \
   --miner.gaslimit 12000000 \
   --http.corsdomain "http://localhost:3033" \
   --http --http.api personal,eth,net,web3,debug \
@@ -30,7 +30,7 @@ docker exec -it geth geth attach http://localhost:8545
 
 #### 1. 转账
 ```shell
-eth.sendTransaction({from: "0xa74d4bad75ff934ac5c4b16b0ad8247166d66cff", to: "0xd21934eD8eAf27a67f0A70042Af50A1D6d195E81", value: "74000000000000000"})
+eth.sendTransaction({from: "0xa74d4bad75ff934ac5c4b16b0ad8247166d66cff", to: "0xd21934eD8eAf27a67f0A70042Af50A1D6d195E81", value: "1000000000000000000"})
 ```
 可以用转账函数来给测试账号充测试币：from地址填写eth.coinbase返回的地址，to填测试地址。
 

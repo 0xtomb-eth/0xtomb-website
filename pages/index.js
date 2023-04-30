@@ -19,9 +19,17 @@ import Layout from '../layout/Layout';
 import showMessage from '../components/showMessage';
 import { handleSubmitWill } from './aaUtils/handleSubmitWill';
 
+import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
+import { MetamaskAdapter } from "@web3auth/metamask-adapter";
+import { useTheme } from '@mui/material/styles';
+
 function HomePage() {
+  const theme = useTheme();
+  const [provider, setProvider] = useState(null);
+  
   const [active, setActive] = useState(1);
   const [beneficiaries, setBeneficiaries] = useState([]);
+  
   const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
@@ -168,6 +176,7 @@ function HomePage() {
                 size="small"
                 fullWidth
                 variant="outlined"
+                color="primary"
                 onClick={() => {
                   setActive(active + 1);
                 }}
@@ -199,6 +208,7 @@ function HomePage() {
                 fontSize={'15px'}
                 fontWeight={200}
                 fontStyle={'italic'}
+                color="primary"
               >
                 I've created a trust to protect my assets for my loved ones
                 after my passing.
@@ -270,6 +280,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color='primary'
                     onClick={() => {
                       setActive(active - 1);
                     }}
@@ -282,6 +293,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color="primary"
                     disabled={!fields.length}
                     onClick={() => {
                       setActive(active + 1);
@@ -377,6 +389,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color='primary'
                     onClick={() => {
                       setActive(active - 1);
                     }}
@@ -389,6 +402,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color="primary"
                     disabled={!fields.length}
                     onClick={() => {
                       const b = getValues('beneficiary');
@@ -499,6 +513,7 @@ function HomePage() {
                     fullWidth
                     size="small"
                     variant="outlined"
+                    color='primary'
                     onClick={() => {
                       setActive(active - 1);
                     }}
@@ -548,7 +563,7 @@ function HomePage() {
               <Typography
                 key={index}
                 fontStyle={active == index + 1 ? '' : 'italic'}
-                color={active == index + 1 ? 'black' : '#a2a9b4'}
+                color={theme.palette.mode === 'dark' ? (active == index + 1 ? 'white' : '#a2a9b4') : (active == index + 1 ? 'black' : '#a2a9b4')}
                 textTransform={'capitalize'}
               >
                 {v}
@@ -557,6 +572,16 @@ function HomePage() {
           </Box>
         </Box>
       </Container>
+      {/* <div className="container">
+      <h1 className="title">
+        <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
+        </a>
+        Connect with Web3Auth
+      </h1>
+
+      <div className="grid">{provider ? loggedInView : unloggedInView}</div>
+
+      </div> */}
     </Layout>
   );
 }
